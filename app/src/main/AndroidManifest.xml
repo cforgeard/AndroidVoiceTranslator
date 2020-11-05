@@ -8,6 +8,8 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.VoiceTranslator" />
+        android:theme="@style/Theme.VoiceTranslator">
+        <activity android:name="fr.enssat.babelblock.mentlia.MainActivity"></activity>
+    </application>
 
 </manifest>
