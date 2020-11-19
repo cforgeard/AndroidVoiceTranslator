@@ -1,25 +1,32 @@
-package fr.enssat.babelblock.mentlia.taskblocks
+package fr.enssat.babelblock.mentlia.taskblocks.blocks
 
 import android.content.Context
 import android.speech.tts.TextToSpeech
 import android.speech.tts.UtteranceProgressListener
 import android.text.TextUtils
-import fr.enssat.babelblock.mentlia.taskblocks.TaskBlock
-import fr.enssat.babelblock.mentlia.taskblocks.TaskBlockAdditionalParameter
-import fr.enssat.babelblock.mentlia.taskblocks.TaskBlockAdditionalParameterType
-import fr.enssat.babelblock.mentlia.taskblocks.TaskBlockException
+import fr.enssat.babelblock.mentlia.R
+import fr.enssat.babelblock.mentlia.taskblocks.*
 import kotlinx.coroutines.delay
 import timber.log.Timber
 import java.util.*
-
 
 class TextToSpeechBlock(appContext: Context) : TaskBlock, UtteranceProgressListener() {
 
     companion object {
         val ARG_TTS_LANGUAGE = TaskBlockAdditionalParameter(
             "ARG_TTS_LANGUAGE",
+            R.string.text_to_speech_block_language_arg_name,
             TaskBlockAdditionalParameterType.LANGUAGE,
             "en"
+        )
+
+        val MANIFEST = TaskBlockManifest(
+            "TextToSpeechBlock",
+            TaskBlockType.IN,
+            R.string.text_to_speech_block_name,
+            R.string.text_to_speech_prepare_execution,
+            R.string.text_to_speech_execute,
+            arrayOf(ARG_TTS_LANGUAGE)
         )
     }
 
@@ -44,20 +51,8 @@ class TextToSpeechBlock(appContext: Context) : TaskBlock, UtteranceProgressListe
         Timber.i("TTS ready")
     }
 
-    override fun id(): String {
-        return "TextToSpeechBlock"
-    }
-
-    override fun requireInputString(): Boolean {
-        return true
-    }
-
-    override fun willOutputString(): Boolean {
-        return false
-    }
-
-    override fun additionalParameters(): Array<TaskBlockAdditionalParameter> {
-        return arrayOf(ARG_TTS_LANGUAGE)
+    override fun getManifest(): TaskBlockManifest {
+        return MANIFEST
     }
 
     override fun setAdditionalParameter(parameterID: String, value: String) {
@@ -69,15 +64,16 @@ class TextToSpeechBlock(appContext: Context) : TaskBlock, UtteranceProgressListe
         }
     }
 
-    override suspend fun execute(inputString: String?): String? {
-        ttsDone = false
-        utteranceID = UUID.randomUUID().toString()
-
+    override suspend fun prepareExecution() {
         //Wait for speechRecognizer initialization
         while (!ttsReady) delay(100)
         if (!TextUtils.isEmpty(error)) throw TaskBlockException("TextToSpeechBlock error : $error")
-        Timber.i("Init OK, call speak function")
+        Timber.i("Init OK")
+    }
 
+    override suspend fun execute(inputString: String?): String? {
+        ttsDone = false
+        utteranceID = UUID.randomUUID().toString()
         textToSpeech.language = Locale.forLanguageTag(language)
 
         //Speak and wait for speak done or error

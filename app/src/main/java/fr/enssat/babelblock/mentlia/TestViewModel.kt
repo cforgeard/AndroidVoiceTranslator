@@ -1,60 +1,78 @@
 package fr.enssat.babelblock.mentlia
 
-import android.Manifest
 import android.app.Application
-import android.content.pm.PackageManager
-import androidx.core.content.ContextCompat
 import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import fr.enssat.babelblock.mentlia.taskblocks.*
-import fr.enssat.babelblock.mentlia.taskblocks.SpeechRecognizerBlock
-import fr.enssat.babelblock.mentlia.taskblocks.TaskBlockException
+import fr.enssat.babelblock.mentlia.taskblocks.TaskBlock
+import fr.enssat.babelblock.mentlia.taskblocks.TaskBlockFactory
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
 // https://www.varvet.com/blog/voice-to-text-arch-android/
-class TestViewModel(application: Application) : AndroidViewModel(application) {
+class TestViewModel(private val app: Application) : AndroidViewModel(app) {
 
-    data class ViewState(val value: String)
+    val tasks = MutableLiveData<ArrayList<TaskBlock>>(ArrayList())
+    val progressMessage = MutableLiveData<Int?>(null)
 
-    private var viewState: MutableLiveData<ViewState> = MutableLiveData()
-    val speechRecognizerBlock = SpeechRecognizerBlock(application.applicationContext)
-    val ttsBlock = TextToSpeechBlock(application.applicationContext)
-    val translateBlock = TranslatorBlock(application.applicationContext)
+    private var taskBlockFactory = TaskBlockFactory(app)
 
-    init {
-        viewState.value = initViewState()
-    }
-
-    var permissionToRecordAudio = checkAudioRecordingPermission(context = application)
-
-    fun getViewState(): LiveData<ViewState> {
-        return viewState
-    }
-
-    private fun initViewState() =
-        ViewState("")
-
-    fun run() {
-        val executor = TaskBlockExecutor(3)
-        executor.add(speechRecognizerBlock)
-        executor.add(translateBlock)
-        executor.add(ttsBlock)
-
-        viewModelScope.launch {
-            try {
-                executor.execute()
-            } catch (ex: TaskBlockException) {
-                Timber.e(ex)
-            }
+    fun getAvailableTaskBlocks(): List<String> {
+        return taskBlockFactory.availableTaskBlock().map {
+            app.getString(it.nameTextResource)
         }
     }
 
-    private fun checkAudioRecordingPermission(context: Application) =
-        ContextCompat.checkSelfPermission(
-            context,
-            Manifest.permission.RECORD_AUDIO
-        ) == PackageManager.PERMISSION_GRANTED
+    fun createNewTaskBlock(index: Int) {
+        addTaskBlock(
+            taskBlockFactory.create(
+                taskBlockFactory.availableTaskBlock()[index].id
+            )
+        )
+    }
+
+    fun addTaskBlock(taskBlock: TaskBlock) {
+        val list = tasks.value!!
+        list.add(taskBlock)
+        tasks.postValue(list)
+    }
+
+    fun addTaskBlock(taskBlock: TaskBlock, index: Int) {
+        val list = tasks.value!!
+        list.add(index, taskBlock)
+        tasks.postValue(list)
+    }
+
+    fun removeTaskBlock(index: Int) {
+        val list = tasks.value!!
+        list.removeAt(index)
+        tasks.postValue(list)
+    }
+
+    fun run() {
+        val tasks = tasks.value!!
+        if (tasks.size == 0) return
+
+        var previousTaskOuput: String? = null
+        viewModelScope.launch {
+            for (i in tasks.indices) {
+                val task = tasks[i]
+                progressMessage.postValue(task.getManifest().prepareTextExecuteResource)
+                Timber.e("Task #$i (${task.getManifest().id}) prepareExecution...")
+                task.prepareExecution()
+                Timber.e("Task #$i (${task.getManifest().id}) prepareExecution OK")
+            }
+
+            for (i in tasks.indices) {
+                val task = tasks[i]
+                progressMessage.postValue(task.getManifest().executeTextResource)
+                Timber.e("Task #$i (${task.getManifest().id}) BEFORE <- $previousTaskOuput")
+                previousTaskOuput = task.execute(previousTaskOuput)
+                Timber.e("Task #$i (${task.getManifest().id}) AFTER -> $previousTaskOuput")
+            }
+
+            progressMessage.postValue(null)
+        }
+    }
 }

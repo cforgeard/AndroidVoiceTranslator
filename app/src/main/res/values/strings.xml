@@ -2,4 +2,23 @@
     <string name="app_name">VoiceTranslator</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string name="speech_recognizer_block_name">Reconnaissance vocale</string>
+    <string name="speech_recognizer_block_prepare_execution">Initialisation de la reconnaissance vocale…</string>
+    <string name="speech_recognizer_block_execute">Parlez maintenant !</string>
+    <string name="speech_recognizer_block_language_arg_name">Langue : </string>
+
+    <string name="text_to_speech_block_name">Synthèse vocale</string>
+    <string name="text_to_speech_prepare_execution">Initialisation de la synthèse vocale…</string>
+    <string name="text_to_speech_execute">Ecoutez maintenant !</string>
+    <string name="text_to_speech_block_language_arg_name">Langue : </string>
+
+    <string name="translator_block_name">Traduction</string>
+    <string name="translator_block_prepare_execution">Téléchargement du système de traduction…</string>
+    <string name="translator_block_execute">Traduction…</string>
+    <string name="translator_block_source_language_arg_name">Langue source : </string>
+    <string name="translator_block_target_language_arg_name">Langue destination : </string>
+
+    <string name="add_task_block">Ajouter un bloc</string>
+
 </resources>

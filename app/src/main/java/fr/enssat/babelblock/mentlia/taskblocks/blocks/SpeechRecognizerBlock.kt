@@ -1,4 +1,4 @@
-package fr.enssat.babelblock.mentlia.taskblocks
+package fr.enssat.babelblock.mentlia.taskblocks.blocks
 
 import android.content.Context
 import android.content.Intent
@@ -7,6 +7,8 @@ import android.speech.RecognitionListener
 import android.speech.RecognizerIntent
 import android.speech.SpeechRecognizer
 import android.text.TextUtils
+import fr.enssat.babelblock.mentlia.R
+import fr.enssat.babelblock.mentlia.taskblocks.*
 import kotlinx.coroutines.delay
 import timber.log.Timber
 
@@ -16,8 +18,18 @@ class SpeechRecognizerBlock(appContext: Context) : TaskBlock, RecognitionListene
     companion object {
         val ARG_SPEECH_RECOGNIZER_LANGUAGE = TaskBlockAdditionalParameter(
             "ARG_SPEECH_RECOGNIZER_LANGUAGE",
+            R.string.speech_recognizer_block_language_arg_name,
             TaskBlockAdditionalParameterType.LANGUAGE,
             "fr"
+        )
+
+        val MANIFEST = TaskBlockManifest(
+            "SpeechRecognizerBlock",
+            TaskBlockType.OUT,
+            R.string.speech_recognizer_block_name,
+            R.string.speech_recognizer_block_prepare_execution,
+            R.string.speech_recognizer_block_execute,
+            arrayOf(ARG_SPEECH_RECOGNIZER_LANGUAGE)
         )
     }
 
@@ -30,20 +42,8 @@ class SpeechRecognizerBlock(appContext: Context) : TaskBlock, RecognitionListene
             setRecognitionListener(this@SpeechRecognizerBlock)
         }
 
-    override fun id(): String {
-        return "SpeechRecognizerBlock"
-    }
-
-    override fun requireInputString(): Boolean {
-        return false
-    }
-
-    override fun willOutputString(): Boolean {
-        return true
-    }
-
-    override fun additionalParameters(): Array<TaskBlockAdditionalParameter> {
-        return arrayOf(ARG_SPEECH_RECOGNIZER_LANGUAGE)
+    override fun getManifest(): TaskBlockManifest {
+        return MANIFEST
     }
 
     override fun setAdditionalParameter(parameterID: String, value: String) {
@@ -53,6 +53,10 @@ class SpeechRecognizerBlock(appContext: Context) : TaskBlock, RecognitionListene
         } else {
             throw TaskBlockException("Unknown parameter : $parameterID")
         }
+    }
+
+    override suspend fun prepareExecution() {
+        //nothing to do
     }
 
     override suspend fun execute(inputString: String?): String? {
