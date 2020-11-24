@@ -8,14 +8,7 @@ import android.view.View
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
 import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
 import android.widget.*
-import timber.log.Timber
 import java.util.*
-
-private val LOCALES = arrayOf(
-    Locale.FRENCH, Locale.ENGLISH, Locale.GERMAN, Locale.ITALIAN,
-    Locale.JAPANESE, Locale.KOREAN, Locale.CHINESE,
-)
-
 
 class TaskBlockView @JvmOverloads constructor(
     context: Context,
@@ -23,12 +16,20 @@ class TaskBlockView @JvmOverloads constructor(
     defStyleAttr: Int = 0
 ) : LinearLayout(context, attrs, defStyleAttr) {
 
+    companion object {
+        private val LOCALES = arrayOf(
+            Locale.FRENCH, Locale.ENGLISH, Locale.GERMAN, Locale.ITALIAN,
+            Locale.JAPANESE, Locale.KOREAN, Locale.CHINESE,
+        )
+    }
+
     init {
         orientation = VERTICAL
     }
 
     private var taskBlock: TaskBlock? = null
 
+    @Suppress("unused")
     fun getTaskBlock(): TaskBlock? {
         return this.taskBlock
     }

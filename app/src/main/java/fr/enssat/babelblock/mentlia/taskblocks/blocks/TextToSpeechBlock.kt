@@ -1,9 +1,14 @@
 package fr.enssat.babelblock.mentlia.taskblocks.blocks
 
+import android.annotation.SuppressLint
 import android.content.Context
+import android.content.res.Resources
 import android.speech.tts.TextToSpeech
 import android.speech.tts.UtteranceProgressListener
 import android.text.TextUtils
+import android.view.LayoutInflater
+import android.view.View
+import android.widget.TextView
 import fr.enssat.babelblock.mentlia.R
 import fr.enssat.babelblock.mentlia.taskblocks.*
 import kotlinx.coroutines.delay
@@ -24,8 +29,6 @@ class TextToSpeechBlock(appContext: Context) : TaskBlock, UtteranceProgressListe
             "TextToSpeechBlock",
             TaskBlockType.IN,
             R.string.text_to_speech_block_name,
-            R.string.text_to_speech_prepare_execution,
-            R.string.text_to_speech_execute,
             arrayOf(ARG_TTS_LANGUAGE)
         )
     }
@@ -62,6 +65,25 @@ class TextToSpeechBlock(appContext: Context) : TaskBlock, UtteranceProgressListe
         } else {
             throw TaskBlockException("Unknown parameter : $parameterID")
         }
+    }
+
+    @SuppressLint("InflateParams")
+    override fun getPrepareExecutionView(
+        layoutInflater: LayoutInflater,
+        resources: Resources
+    ): View {
+        val view = layoutInflater.inflate(R.layout.generic_loading_dialog, null)
+        view.findViewById<TextView>(R.id.textView).text =
+            resources.getString(R.string.text_to_speech_prepare_execution)
+        return view
+    }
+
+    @SuppressLint("InflateParams")
+    override fun getExecuteView(layoutInflater: LayoutInflater, resources: Resources): View {
+        val view = layoutInflater.inflate(R.layout.generic_loading_dialog, null)
+        view.findViewById<TextView>(R.id.textView).text =
+            resources.getString(R.string.text_to_speech_execute)
+        return view
     }
 
     override suspend fun prepareExecution() {

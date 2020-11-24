@@ -1,8 +1,12 @@
 package fr.enssat.babelblock.mentlia.taskblocks.blocks
 
+import android.annotation.SuppressLint
 import android.content.Context
+import android.content.res.Resources
+import android.view.LayoutInflater
+import android.view.View
+import android.widget.TextView
 import com.google.android.gms.tasks.Task
-import com.google.android.gms.tasks.Tasks
 import com.google.mlkit.nl.translate.Translation
 import com.google.mlkit.nl.translate.Translator
 import com.google.mlkit.nl.translate.TranslatorOptions
@@ -20,12 +24,14 @@ suspend fun <T> Task<T>.await(): T = suspendCoroutine { continuation ->
             @Suppress("UNCHECKED_CAST")
             continuation.resume(task.result as T)
         } else {
-            continuation.resumeWithException(task.exception ?: RuntimeException("Unknown task exception"))
+            continuation.resumeWithException(
+                task.exception ?: RuntimeException("Unknown task exception")
+            )
         }
     }
 }
 
-class TranslatorBlock(appContext: Context) : TaskBlock {
+class TranslatorBlock(@Suppress("UNUSED_PARAMETER") appContext: Context) : TaskBlock {
 
     companion object {
         val ARG_TRANSLATE_SOURCE_LANGUAGE = TaskBlockAdditionalParameter(
@@ -46,8 +52,6 @@ class TranslatorBlock(appContext: Context) : TaskBlock {
             "TranslatorBlock",
             TaskBlockType.INOUT,
             R.string.translator_block_name,
-            R.string.translator_block_prepare_execution,
-            R.string.translator_block_execute,
             arrayOf(ARG_TRANSLATE_SOURCE_LANGUAGE, ARG_TRANSLATE_TARGET_LANGUAGE)
         )
 
@@ -72,6 +76,25 @@ class TranslatorBlock(appContext: Context) : TaskBlock {
         }
     }
 
+    @SuppressLint("InflateParams")
+    override fun getPrepareExecutionView(
+        layoutInflater: LayoutInflater,
+        resources: Resources
+    ): View {
+        val view = layoutInflater.inflate(R.layout.generic_loading_dialog, null)
+        view.findViewById<TextView>(R.id.textView).text =
+            resources.getString(R.string.translator_block_prepare_execution)
+        return view
+    }
+
+    @SuppressLint("InflateParams")
+    override fun getExecuteView(layoutInflater: LayoutInflater, resources: Resources): View {
+        val view = layoutInflater.inflate(R.layout.generic_loading_dialog, null)
+        view.findViewById<TextView>(R.id.textView).text =
+            resources.getString(R.string.translator_block_execute)
+        return view
+    }
+
     override suspend fun prepareExecution() {
         try {
             val options = TranslatorOptions.Builder()
@@ -88,7 +111,7 @@ class TranslatorBlock(appContext: Context) : TaskBlock {
         }
     }
 
-    override suspend fun execute(inputString: String?): String? {
+    override suspend fun execute(inputString: String?): String {
         try {
             Timber.i("translate start...")
             val translateTask = translator!!.translate(inputString!!)

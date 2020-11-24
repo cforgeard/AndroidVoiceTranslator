@@ -1,12 +1,17 @@
 package fr.enssat.babelblock.mentlia.taskblocks.blocks
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
+import android.content.res.Resources
 import android.os.Bundle
 import android.speech.RecognitionListener
 import android.speech.RecognizerIntent
 import android.speech.SpeechRecognizer
 import android.text.TextUtils
+import android.view.LayoutInflater
+import android.view.View
+import android.widget.TextView
 import fr.enssat.babelblock.mentlia.R
 import fr.enssat.babelblock.mentlia.taskblocks.*
 import kotlinx.coroutines.delay
@@ -27,8 +32,6 @@ class SpeechRecognizerBlock(appContext: Context) : TaskBlock, RecognitionListene
             "SpeechRecognizerBlock",
             TaskBlockType.OUT,
             R.string.speech_recognizer_block_name,
-            R.string.speech_recognizer_block_prepare_execution,
-            R.string.speech_recognizer_block_execute,
             arrayOf(ARG_SPEECH_RECOGNIZER_LANGUAGE)
         )
     }
@@ -55,11 +58,30 @@ class SpeechRecognizerBlock(appContext: Context) : TaskBlock, RecognitionListene
         }
     }
 
+    @SuppressLint("InflateParams")
+    override fun getPrepareExecutionView(
+        layoutInflater: LayoutInflater,
+        resources: Resources
+    ): View {
+        val view = layoutInflater.inflate(R.layout.generic_loading_dialog, null)
+        view.findViewById<TextView>(R.id.textView).text =
+            resources.getString(R.string.speech_recognizer_block_prepare_execution)
+        return view
+    }
+
+    @SuppressLint("InflateParams")
+    override fun getExecuteView(layoutInflater: LayoutInflater, resources: Resources): View {
+        val view = layoutInflater.inflate(R.layout.generic_loading_dialog, null)
+        view.findViewById<TextView>(R.id.textView).text =
+            resources.getString(R.string.speech_recognizer_block_execute)
+        return view
+    }
+
     override suspend fun prepareExecution() {
         //nothing to do
     }
 
-    override suspend fun execute(inputString: String?): String? {
+    override suspend fun execute(inputString: String?): String {
         result = ""
 
         val speechRecognizerIntent: Intent =

@@ -1,10 +1,7 @@
 package fr.enssat.babelblock.mentlia
 
-import android.app.ProgressDialog
-import android.content.pm.PackageManager
-import android.graphics.Color
 import android.os.Bundle
-import androidx.annotation.StringRes
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.ItemTouchHelper
@@ -12,17 +9,18 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import fr.enssat.babelblock.mentlia.databinding.ActivityTestBinding
-import timber.log.Timber
+import fr.enssat.babelblock.mentlia.taskblocks.TaskBlock
+import fr.enssat.babelblock.mentlia.taskblocks.TaskBlockAdapter
 
 
-class TestActivity : AppCompatActivity(), StartDragListener {
+class TestActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityTestBinding
-    private lateinit var recyclerViewAdapter: RecyclerViewAdapter
+    private lateinit var adapter: TaskBlockAdapter
     private lateinit var viewModel: TestViewModel
     private lateinit var viewModelFactory: TestViewModelFactory
-    private lateinit var touchHelper: ItemTouchHelper
-    private lateinit var progressDialog: ProgressDialog
+    private lateinit var moveHelper: ItemTouchHelper
+    private var loadingDialog: AlertDialog? = null
 
     private val REQUEST_CODE_RECORD_AUDIO_PERMISSION = 10
 
@@ -31,20 +29,34 @@ class TestActivity : AppCompatActivity(), StartDragListener {
         binding = ActivityTestBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        progressDialog = ProgressDialog(this, ProgressDialog.STYLE_SPINNER)
-        progressDialog.setCancelable(false)
-
-        recyclerViewAdapter = RecyclerViewAdapter(this)
-        binding.recyclerView.adapter = recyclerViewAdapter
-        touchHelper = ItemTouchHelper(ItemMoveCallback(recyclerViewAdapter))
-        touchHelper.attachToRecyclerView(binding.recyclerView)
-        enableSwipeToDeleteAndUndo();
-
         viewModelFactory = TestViewModelFactory(application)
         viewModel = ViewModelProvider(this, viewModelFactory).get(TestViewModel::class.java)
-        viewModel.tasks.observe(this, { recyclerViewAdapter.data = it })
-        viewModel.progressMessage.observe(this, { setProgressMessage(it) })
 
+        adapter = TaskBlockAdapter(
+            viewModel.taskBlockChain,
+            object : RecyclerViewMoveHelper.StartDragListener {
+                override fun requestDrag(viewHolder: RecyclerView.ViewHolder) {
+                    moveHelper.startDrag(viewHolder)
+                }
+            })
+        binding.recyclerView.adapter = adapter
+
+        moveHelper = RecyclerViewMoveHelper.create(adapter)
+        moveHelper.attachToRecyclerView(binding.recyclerView)
+
+        val swipeHandler = object : RecyclerViewSwipeToDeleteCallback(this) {
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                showUndoDeleteSnackbar(
+                    viewModel.taskBlockChain.get(viewHolder.adapterPosition),
+                    viewHolder.adapterPosition
+                )
+                viewModel.taskBlockChain.removeAt(viewHolder.adapterPosition)
+            }
+        }
+        val itemTouchHelper = ItemTouchHelper(swipeHandler)
+        itemTouchHelper.attachToRecyclerView(binding.recyclerView)
+
+        viewModel.viewState.observe(this, { refresh() })
         binding.runBtn.setOnClickListener {
             viewModel.run()
         }
@@ -75,19 +87,37 @@ class TestActivity : AppCompatActivity(), StartDragListener {
         }*/
     }
 
-    override fun requestDrag(viewHolder: RecyclerView.ViewHolder) {
-        touchHelper.startDrag(viewHolder)
+    private fun refresh() {
+        val viewState = viewModel.viewState.value!!
+        if (viewState.preparingExecution) {
+            this.createLoadingDialogIfNecessary()
+            loadingDialog!!.setContentView(
+                viewState.taskBlock!!.getPrepareExecutionView(
+                    layoutInflater, resources
+                )
+            )
+
+        } else if (viewState.executing) {
+            this.createLoadingDialogIfNecessary()
+            loadingDialog!!.setContentView(
+                viewState.taskBlock!!.getExecuteView(
+                    layoutInflater, resources
+                )
+            )
+
+        } else {
+            if (loadingDialog != null) {
+                loadingDialog!!.dismiss()
+                loadingDialog = null
+            }
+        }
     }
 
-    private fun setProgressMessage(@StringRes stringRes: Int?) {
-        Timber.e("progressMessage = %s", if (stringRes == null) "null" else getString(stringRes))
-        if (stringRes == null) {
-            this.progressDialog.setTitle("")
-            this.progressDialog.setCancelable(true)
-            this.progressDialog.cancel()
-        } else {
-            this.progressDialog.setTitle(stringRes)
-            this.progressDialog.show()
+    private fun createLoadingDialogIfNecessary() {
+        if (loadingDialog == null) {
+            loadingDialog = MaterialAlertDialogBuilder(this)
+                .setCancelable(false)
+                .show()
         }
     }
 
@@ -100,28 +130,14 @@ class TestActivity : AppCompatActivity(), StartDragListener {
             .show()
     }
 
-    private fun enableSwipeToDeleteAndUndo() {
-        val swipeToDeleteCallback: SwipeToDeleteCallback = object : SwipeToDeleteCallback(this) {
-            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, i: Int) {
-                val position = viewHolder.adapterPosition
-                val item = recyclerViewAdapter.data[position]
-                viewModel.removeTaskBlock(position)
+    private fun showUndoDeleteSnackbar(item: TaskBlock, position: Int) {
+        val snackbar = Snackbar
+            .make(binding.root, R.string.item_was_removed, Snackbar.LENGTH_LONG)
 
-                val snackbar = Snackbar
-                    .make(
-                        binding.root,
-                        "Item was removed from the list.",
-                        Snackbar.LENGTH_LONG
-                    )
-                snackbar.setAction("UNDO") {
-                    viewModel.addTaskBlock(item, position)
-                    binding.recyclerView.scrollToPosition(position)
-                }
-                snackbar.setActionTextColor(Color.YELLOW)
-                snackbar.show()
-            }
+        snackbar.setAction(R.string.undo) {
+            viewModel.taskBlockChain.add(item, position)
+            binding.recyclerView.scrollToPosition(position)
         }
-        val itemTouchHelper = ItemTouchHelper(swipeToDeleteCallback)
-        itemTouchHelper.attachToRecyclerView(binding.recyclerView)
+        snackbar.show()
     }
 }

@@ -20,5 +20,7 @@
     <string name="translator_block_target_language_arg_name">Langue destination : </string>
 
     <string name="add_task_block">Ajouter un bloc</string>
+    <string name="item_was_removed">Item was removed from the list.</string>
+    <string name="undo">UNDO</string>
 
 </resources>
