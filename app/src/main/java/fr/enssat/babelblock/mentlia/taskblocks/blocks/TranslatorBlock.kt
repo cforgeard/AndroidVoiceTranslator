@@ -6,12 +6,14 @@ import android.content.res.Resources
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.TextView
+import androidx.annotation.StringDef
 import com.google.android.gms.tasks.Task
 import com.google.mlkit.nl.translate.Translation
 import com.google.mlkit.nl.translate.Translator
 import com.google.mlkit.nl.translate.TranslatorOptions
 import fr.enssat.babelblock.mentlia.R
 import fr.enssat.babelblock.mentlia.taskblocks.*
+import org.json.JSONObject
 import timber.log.Timber
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
@@ -31,7 +33,7 @@ suspend fun <T> Task<T>.await(): T = suspendCoroutine { continuation ->
     }
 }
 
-class TranslatorBlock(@Suppress("UNUSED_PARAMETER") appContext: Context) : TaskBlock {
+class TranslatorBlock(private val appContext: Context) : TaskBlock {
 
     companion object {
         val ARG_TRANSLATE_SOURCE_LANGUAGE = TaskBlockAdditionalParameter(
@@ -52,10 +54,21 @@ class TranslatorBlock(@Suppress("UNUSED_PARAMETER") appContext: Context) : TaskB
             "TranslatorBlock",
             TaskBlockType.INOUT,
             R.string.translator_block_name,
+            R.string.translator_block_description,
+            R.drawable.ic_baseline_g_translate_24,
             arrayOf(ARG_TRANSLATE_SOURCE_LANGUAGE, ARG_TRANSLATE_TARGET_LANGUAGE)
         )
 
+        const val ERROR_DOWNLOAD_MODEL_FAILED = "error_download_model_failed"
+        const val ERROR_TRANSLATE_FAILED = "error_translate_failed"
     }
+
+    @Retention(AnnotationRetention.SOURCE)
+    @StringDef(
+        ERROR_DOWNLOAD_MODEL_FAILED,
+        ERROR_TRANSLATE_FAILED
+    )
+    annotation class Error
 
     private var translator: Translator? = null
     private var sourceLanguage = ARG_TRANSLATE_SOURCE_LANGUAGE.defaultValue
@@ -67,13 +80,35 @@ class TranslatorBlock(@Suppress("UNUSED_PARAMETER") appContext: Context) : TaskB
 
     override fun setAdditionalParameter(parameterID: String, value: String) {
         Timber.e("%s -> %s", parameterID, value)
-        if (parameterID == ARG_TRANSLATE_SOURCE_LANGUAGE.id) {
-            sourceLanguage = value
-        } else if (parameterID == ARG_TRANSLATE_TARGET_LANGUAGE.id) {
-            targetLanguage = value
-        } else {
-            throw TaskBlockException("Unknown parameter : $parameterID")
+        when (parameterID) {
+            ARG_TRANSLATE_SOURCE_LANGUAGE.id -> {
+                sourceLanguage = value
+            }
+            ARG_TRANSLATE_TARGET_LANGUAGE.id -> {
+                targetLanguage = value
+            }
+            else -> {
+                throw IllegalArgumentException("Unknown parameter : $parameterID")
+            }
         }
+    }
+
+    override fun toJSON(): JSONObject {
+        val jsonObject = JSONObject()
+        jsonObject.put(ARG_TRANSLATE_SOURCE_LANGUAGE.id, sourceLanguage)
+        jsonObject.put(ARG_TRANSLATE_TARGET_LANGUAGE.id, targetLanguage)
+        return jsonObject
+    }
+
+    override fun fromJSON(jsonObject: JSONObject) {
+        sourceLanguage = jsonObject.optString(
+            ARG_TRANSLATE_SOURCE_LANGUAGE.id,
+            ARG_TRANSLATE_SOURCE_LANGUAGE.defaultValue
+        )
+        targetLanguage = jsonObject.optString(
+            ARG_TRANSLATE_TARGET_LANGUAGE.id,
+            ARG_TRANSLATE_TARGET_LANGUAGE.defaultValue
+        )
     }
 
     @SuppressLint("InflateParams")
@@ -107,7 +142,11 @@ class TranslatorBlock(@Suppress("UNUSED_PARAMETER") appContext: Context) : TaskB
             translator!!.downloadModelIfNeeded().await()
             Timber.i("downloadModelIfNeeded OK")
         } catch (throwable: Throwable) {
-            throw TaskBlockException("TranslatorBlock.prepareExecution failed", throwable)
+            throw TaskBlockException(
+                this,
+                ERROR_DOWNLOAD_MODEL_FAILED,
+                appContext.getString(R.string.translate_model_error)
+            )
         }
     }
 
@@ -120,7 +159,11 @@ class TranslatorBlock(@Suppress("UNUSED_PARAMETER") appContext: Context) : TaskB
 
             return translatedText
         } catch (throwable: Throwable) {
-            throw TaskBlockException("TranslatorBlock.execute failed", throwable)
+            throw TaskBlockException(
+                this,
+                ERROR_TRANSLATE_FAILED,
+                appContext.getString(R.string.unknown_error)
+            )
         } finally {
             translator?.close()
         }

@@ -3,7 +3,9 @@ package fr.enssat.babelblock.mentlia.taskblocks
 import android.content.res.Resources
 import android.view.LayoutInflater
 import android.view.View
+import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
+import org.json.JSONObject
 
 enum class TaskBlockAdditionalParameterType {
     LANGUAGE
@@ -19,6 +21,8 @@ data class TaskBlockManifest(
     val id: String,
     val type: TaskBlockType,
     @StringRes val nameTextResource: Int,
+    @StringRes val descriptionTextResource: Int,
+    @DrawableRes val iconResource: Int,
     val additionalParameters: Array<TaskBlockAdditionalParameter>
 ) {
     override fun equals(other: Any?): Boolean {
@@ -56,6 +60,8 @@ interface TaskBlock {
     fun setAdditionalParameter(parameterID: String, value: String)
     fun getPrepareExecutionView(layoutInflater: LayoutInflater, resources: Resources): View
     fun getExecuteView(layoutInflater: LayoutInflater, resources: Resources): View
+    fun toJSON(): JSONObject
+    fun fromJSON(jsonObject: JSONObject)
     suspend fun prepareExecution()
     suspend fun execute(inputString: String?): String?
 }

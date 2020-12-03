@@ -5,6 +5,7 @@ import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
+import android.view.View.GONE
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.cardview.widget.CardView
@@ -20,7 +21,8 @@ class TaskBlockAdapter(
     RecyclerViewMoveHelper.ItemTouchHelperContract {
 
     init {
-        taskBlockChain.setOnChangeListener { notifyDataSetChanged() }
+        taskBlockChain.setOnItemInsertedListener { notifyItemInserted(it) }
+        taskBlockChain.setOnItemRemovedListener { notifyItemRemoved(it) }
     }
 
     override fun getItemCount(): Int = taskBlockChain.size
@@ -32,8 +34,18 @@ class TaskBlockAdapter(
 
     @SuppressLint("ClickableViewAccessibility")
     override fun onBindViewHolder(holder: TaskBlockViewHolder, position: Int) {
-        holder.taskBlockView.setTaskBlock(taskBlockChain.get(position))
-        holder.imageView.setOnTouchListener { _, event ->
+        val item = taskBlockChain.get(position)
+        holder.taskBlockView.setTaskBlock(item)
+        when (item.getManifest().type) {
+            TaskBlockType.IN -> holder.startCircle.visibility = GONE
+            TaskBlockType.OUT -> holder.endCircle.visibility = GONE
+            TaskBlockType.INOUT -> {
+                holder.startCircle.visibility = GONE
+                holder.endCircle.visibility = GONE
+            }
+        }
+
+        holder.moveImageView.setOnTouchListener { _, event ->
             if (event.action ==
                 MotionEvent.ACTION_DOWN
             ) {
@@ -62,8 +74,10 @@ class TaskBlockAdapter(
 
     class TaskBlockViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val cardView: CardView = itemView.findViewById(R.id.cardView)
-        val imageView: ImageView = itemView.findViewById(R.id.imageView)
+        val moveImageView: ImageView = itemView.findViewById(R.id.moveImageView)
         val taskBlockView: TaskBlockView = itemView.findViewById(R.id.taskBlockView)
+        val startCircle: ImageView = itemView.findViewById(R.id.startCircle)
+        val endCircle: ImageView = itemView.findViewById(R.id.endCircle)
     }
 
 }
