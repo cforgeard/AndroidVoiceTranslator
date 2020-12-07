@@ -67,7 +67,6 @@ class TextToSpeechBlock(private val appContext: Context) : TaskBlock, UtteranceP
     private var utteranceID = ""
 
     @Error
-    @Transient
     private var error: String? = null
     private var ttsReady = false
     private var ttsDone = false

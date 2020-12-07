@@ -16,6 +16,7 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import fr.enssat.babelblock.mentlia.databinding.ActivityMainBinding
+import org.imaginativeworld.oopsnointernet.NoInternetDialog
 import org.json.JSONArray
 
 
@@ -30,6 +31,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var viewModel: MainViewModel
     private lateinit var viewModelFactory: MainViewModelFactory
     private var loadingDialog: AlertDialog? = null
+    private var noInternetDialog: NoInternetDialog? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -79,6 +81,27 @@ class MainActivity : AppCompatActivity() {
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.main_menu, menu)
         return true
+    }
+
+    override fun onResume() {
+        super.onResume()
+        noInternetDialog = NoInternetDialog.Builder(this).apply {
+            cancelable = false
+            noInternetConnectionTitle = getString(R.string.no_internet_connection_title)
+            noInternetConnectionMessage = getString(R.string.no_internet_connection_message)
+            pleaseTurnOnText = getString(R.string.please_turn_on_text)
+            wifiOnButtonText = getString(R.string.wifi_on_button_text)
+            mobileDataOnButtonText = getString(R.string.mobile_data_on_button_text)
+            onAirplaneModeTitle = getString(R.string.on_airplane_mode_title)
+            onAirplaneModeMessage = getString(R.string.on_airplane_mode_message)
+            pleaseTurnOffText = getString(R.string.please_turn_off_text)
+            airplaneModeOffButtonText = getString(R.string.airplane_mode_off_button_text)
+        }.build()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        noInternetDialog?.destroy()
     }
 
     override fun onRequestPermissionsResult(

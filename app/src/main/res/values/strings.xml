@@ -38,4 +38,15 @@
     <string name="yes">Oui</string>
     <string name="confirm_delete_all_blocks">Voulez-vous vraiment supprimer tous les blocs ?</string>
 
+    <!-- For NoInternetDialog (see MainActivity.onResume)  -->
+    <string name="no_internet_connection_title">Aucune connexion Internet</string>
+    <string name="no_internet_connection_message">Veuillez vérifiez votre connexion à Internet</string>
+    <string name="please_turn_on_text">Veuillez activer</string>
+    <string name="wifi_on_button_text">WiFi</string>
+    <string name="mobile_data_on_button_text">Données mobiles</string>
+    <string name="on_airplane_mode_title">Aucune connexion Internet</string>
+    <string name="on_airplane_mode_message">Vous avez activé le mode avion</string>
+    <string name="please_turn_off_text">Veuillez désactiver :</string>
+    <string name="airplane_mode_off_button_text">Mode avion</string>
+
 </resources>
