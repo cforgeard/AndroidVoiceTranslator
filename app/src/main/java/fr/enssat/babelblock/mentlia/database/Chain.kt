@@ -1,38 +1,13 @@
-package fr.enssat.babelblock.mentlia.database;
+package fr.enssat.babelblock.mentlia.database
 
-public class Serie {
-    private long id;
-    private String name;
-    private int favori;
+import androidx.room.ColumnInfo
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 
-    public Serie(long id, String name, int favori) {
-        super();
-        this.id = id;
-        this.name = name;
-        this.favori = favori;
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String nom) {
-        this.name = nom;
-    }
-
-    public int getFavori() {
-        return favori;
-    }
-
-    public void setFavori(int favori) {
-        this.favori = favori;
-    }
-}
+@Entity(tableName = "Chain")
+class Chain(
+    @PrimaryKey(autoGenerate = true) var id: Long,
+    @ColumnInfo(name = "nom") var nom: String,
+    @ColumnInfo(name = "favori") var favori: Int,
+    @ColumnInfo(name = "json") var json: String
+)
