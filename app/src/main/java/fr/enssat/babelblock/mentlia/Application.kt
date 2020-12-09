@@ -1,14 +1,16 @@
 package fr.enssat.babelblock.mentlia
 
 import android.app.Application
-import androidx.viewbinding.BuildConfig
+import android.content.pm.ApplicationInfo
 import timber.log.Timber
 import timber.log.Timber.DebugTree
 
-class Application() : Application() {
+@Suppress("unused")
+class Application : Application() {
     override fun onCreate() {
         super.onCreate()
-        if (BuildConfig.DEBUG) {
+        val isDebuggable = 0 != applicationInfo.flags and ApplicationInfo.FLAG_DEBUGGABLE
+        if (isDebuggable) {
             Timber.plant(DebugTree())
         }
     }

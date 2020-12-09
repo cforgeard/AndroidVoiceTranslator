@@ -1,5 +1,52 @@
 <resources>
     <string name="app_name">VoiceTranslator</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string name="speech_recognizer_block_name">Reconnaissance vocale</string>
+    <string name="speech_recognizer_block_description">Reconnaissance vocale</string>
+    <string name="speech_recognizer_block_prepare_execution">Initialisation de la reconnaissance vocale…</string>
+    <string name="speech_recognizer_block_execute">Parlez maintenant !</string>
+    <string name="speech_recognizer_block_language_arg_name">Langue : </string>
+
+    <string name="text_to_speech_block_name">Synthèse vocale</string>
+    <string name="text_to_speech_block_description">Synthèse vocale</string>
+    <string name="text_to_speech_prepare_execution">Initialisation de la synthèse vocale…</string>
+    <string name="text_to_speech_execute">Ecoutez maintenant !</string>
+    <string name="text_to_speech_block_language_arg_name">Langue : </string>
+
+    <string name="translator_block_name">Traduction</string>
+    <string name="translator_block_description">Traduction</string>
+    <string name="translator_block_prepare_execution">Téléchargement du système de traduction…</string>
+    <string name="translator_block_execute">Traduction…</string>
+    <string name="translator_block_source_language_arg_name">Langue source : </string>
+    <string name="translator_block_target_language_arg_name">Langue destination : </string>
+
+    <string name="record_audio_persmission_not_allowed">L\'accès au microphone est nécessaire pour exécuter votre script. Veuillez l\'autoriser dans les paramètres de l\'application puis réessayez</string>
+    <string name="add_task_block">Ajouter un bloc</string>
+    <string name="item_was_removed">Bloc supprimé</string>
+    <string name="undo">Annuler</string>
+    <string name="add">Ajouter</string>
+    <string name="run">Exécuter</string>
+    <string name="open_settings">Ouvrir les paramètres</string>
+    <string name="invalid_taskblock_chain">Ce script ne peut pas être exécuté car l\'ordre des tâches est incohérent (eg une tâche demandant un donnée en entrée est exécucté après un bloc ne donnant pas de donnée en sortie</string>
+
+    <string name="no_match_speech_recognizer_error">Désolé… l\'application n\'a pas compris votre voix ! Veuillez réessayez.</string>
+    <string name="network_error">Erreur réseau. Veuillez vérifier votre connexion à Internet puis réessayez</string>
+    <string name="translate_model_error">Erreur pendant le téléchargement du système de traduction. Veuillez vérifier votre connexion à Internet puis réessayez</string>
+    <string name="unknown_error">Erreur inconnue. Si vous êtes en train d\'utiliser un émulateur, veuillez utiliser un appareil physique puis réessayez</string>
+    <string name="reset">Tout supprimer</string>
+    <string name="no">Non</string>
+    <string name="yes">Oui</string>
+    <string name="confirm_delete_all_blocks">Voulez-vous vraiment supprimer tous les blocs ?</string>
+
+    <!-- For NoInternetDialog (see MainActivity.onResume)  -->
+    <string name="no_internet_connection_title">Aucune connexion Internet</string>
+    <string name="no_internet_connection_message">Veuillez vérifiez votre connexion à Internet</string>
+    <string name="please_turn_on_text">Veuillez activer</string>
+    <string name="wifi_on_button_text">WiFi</string>
+    <string name="mobile_data_on_button_text">Données mobiles</string>
+    <string name="on_airplane_mode_title">Aucune connexion Internet</string>
+    <string name="on_airplane_mode_message">Vous avez activé le mode avion</string>
+    <string name="please_turn_off_text">Veuillez désactiver :</string>
+    <string name="airplane_mode_off_button_text">Mode avion</string>
+
 </resources>
