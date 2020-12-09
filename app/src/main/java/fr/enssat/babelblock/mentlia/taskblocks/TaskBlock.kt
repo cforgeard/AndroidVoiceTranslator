@@ -57,6 +57,7 @@ data class TaskBlockAdditionalParameter(
 
 interface TaskBlock {
     fun getManifest(): TaskBlockManifest
+    fun getAdditionalParameter(parameterID: String): String
     fun setAdditionalParameter(parameterID: String, value: String)
     fun getPrepareExecutionView(layoutInflater: LayoutInflater, resources: Resources): View
     fun getExecuteView(layoutInflater: LayoutInflater, resources: Resources): View

@@ -53,6 +53,7 @@ class TaskBlockView @JvmOverloads constructor(
         addView(taskName)
 
         taskBlock!!.getManifest().additionalParameters.forEach {
+            val value = taskBlock!!.getAdditionalParameter(it.id)
             if (it.type == TaskBlockAdditionalParameterType.LANGUAGE) {
                 val spinnerTitle = TextView(context)
                 with(spinnerTitle) {
@@ -64,12 +65,12 @@ class TaskBlockView @JvmOverloads constructor(
                 val spinner = Spinner(context)
                 val spinnerAdapter =
                     ArrayAdapter<String>(context, android.R.layout.simple_spinner_dropdown_item)
-                var defaultValuePosition = -1
+                var selectionIndex = -1
                 for (i in LOCALES.indices) {
                     val locale = LOCALES[i]
                     spinnerAdapter.add(locale.displayLanguage.toString())
-                    if (locale.toString().split("-")[0] == it.defaultValue) {
-                        defaultValuePosition = i
+                    if (locale.toString().split("-")[0] == value) {
+                        selectionIndex = i
                     }
                 }
 
@@ -90,8 +91,8 @@ class TaskBlockView @JvmOverloads constructor(
                         }
                 }
 
-                if (defaultValuePosition != -1) {
-                    spinner.setSelection(defaultValuePosition)
+                if (selectionIndex != -1) {
+                    spinner.setSelection(selectionIndex)
                 }
 
                 addView(spinner)

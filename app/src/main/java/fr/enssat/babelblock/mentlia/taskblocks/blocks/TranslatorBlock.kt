@@ -79,6 +79,20 @@ class TranslatorBlock(private val appContext: Context) : TaskBlock {
         return MANIFEST
     }
 
+    override fun getAdditionalParameter(parameterID: String): String {
+        when (parameterID) {
+            ARG_TRANSLATE_SOURCE_LANGUAGE.id -> {
+                return sourceLanguage
+            }
+            ARG_TRANSLATE_TARGET_LANGUAGE.id -> {
+                return targetLanguage
+            }
+            else -> {
+                throw IllegalArgumentException("Unknown parameter : $parameterID")
+            }
+        }
+    }
+
     override fun setAdditionalParameter(parameterID: String, value: String) {
         Timber.e("%s -> %s", parameterID, value)
         when (parameterID) {
@@ -102,6 +116,7 @@ class TranslatorBlock(private val appContext: Context) : TaskBlock {
     }
 
     override fun fromJSON(jsonObject: JSONObject) {
+        Timber.e(jsonObject.toString())
         sourceLanguage = jsonObject.optString(
             ARG_TRANSLATE_SOURCE_LANGUAGE.id,
             ARG_TRANSLATE_SOURCE_LANGUAGE.defaultValue

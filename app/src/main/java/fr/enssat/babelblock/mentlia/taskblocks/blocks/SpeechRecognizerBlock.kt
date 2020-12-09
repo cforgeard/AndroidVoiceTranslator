@@ -83,6 +83,14 @@ class SpeechRecognizerBlock(private val appContext: Context) : TaskBlock, Recogn
         return MANIFEST
     }
 
+    override fun getAdditionalParameter(parameterID: String): String {
+        if (parameterID == ARG_SPEECH_RECOGNIZER_LANGUAGE.id) {
+            return language
+        } else {
+            throw IllegalArgumentException("Unknown parameter : $parameterID")
+        }
+    }
+
     override fun setAdditionalParameter(parameterID: String, value: String) {
         Timber.e("%s -> %s", parameterID, value)
         if (parameterID == ARG_SPEECH_RECOGNIZER_LANGUAGE.id) {
