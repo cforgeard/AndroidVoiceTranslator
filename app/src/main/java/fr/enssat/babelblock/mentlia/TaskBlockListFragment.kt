@@ -39,23 +39,16 @@ class TaskBlockListFragment : Fragment() {
                 override fun requestDrag(viewHolder: RecyclerView.ViewHolder) {
                     moveHelper.startDrag(viewHolder)
                 }
+            },
+            object : TaskBlockAdapter.DeleteCallback {
+                override fun deleteItem(position: Int, item: TaskBlock) {
+                    showUndoDeleteSnackbar(item, position)
+                    viewModel.taskBlockChain.removeAt(position)
+                }
             })
         binding.recyclerView.adapter = adapter
-
         moveHelper = RecyclerViewMoveHelper.create(adapter)
         moveHelper.attachToRecyclerView(binding.recyclerView)
-
-        val swipeHandler = object : RecyclerViewSwipeToDeleteCallback(context!!) {
-            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-                showUndoDeleteSnackbar(
-                    viewModel.taskBlockChain.get(viewHolder.adapterPosition),
-                    viewHolder.adapterPosition
-                )
-                viewModel.taskBlockChain.removeAt(viewHolder.adapterPosition)
-            }
-        }
-        val itemTouchHelper = ItemTouchHelper(swipeHandler)
-        itemTouchHelper.attachToRecyclerView(binding.recyclerView)
 
         return view
     }

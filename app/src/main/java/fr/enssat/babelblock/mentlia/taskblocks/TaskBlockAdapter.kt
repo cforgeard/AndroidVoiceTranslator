@@ -5,7 +5,6 @@ import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
-import android.view.View.GONE
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.cardview.widget.CardView
@@ -15,7 +14,8 @@ import fr.enssat.babelblock.mentlia.RecyclerViewMoveHelper
 
 class TaskBlockAdapter(
     private val taskBlockChain: TaskBlockChain,
-    private val callback: RecyclerViewMoveHelper.StartDragListener
+    private val startDragListener: RecyclerViewMoveHelper.StartDragListener,
+    private val deleteCallback: DeleteCallback
 ) :
     RecyclerView.Adapter<TaskBlockAdapter.TaskBlockViewHolder>(),
     RecyclerViewMoveHelper.ItemTouchHelperContract {
@@ -36,20 +36,14 @@ class TaskBlockAdapter(
     override fun onBindViewHolder(holder: TaskBlockViewHolder, position: Int) {
         val item = taskBlockChain.get(position)
         holder.taskBlockView.setTaskBlock(item)
-        when (item.getManifest().type) {
-            TaskBlockType.IN -> holder.startCircle.visibility = GONE
-            TaskBlockType.OUT -> holder.endCircle.visibility = GONE
-            TaskBlockType.INOUT -> {
-                holder.startCircle.visibility = GONE
-                holder.endCircle.visibility = GONE
-            }
+        holder.deleteImageView.setOnClickListener {
+            deleteCallback.deleteItem(position, item)
         }
-
         holder.moveImageView.setOnTouchListener { _, event ->
             if (event.action ==
                 MotionEvent.ACTION_DOWN
             ) {
-                callback.requestDrag(holder)
+                startDragListener.requestDrag(holder)
             }
             false
         }
@@ -72,12 +66,14 @@ class TaskBlockAdapter(
         }
     }
 
-    class TaskBlockViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+    inner class TaskBlockViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val cardView: CardView = itemView.findViewById(R.id.cardView)
         val moveImageView: ImageView = itemView.findViewById(R.id.moveImageView)
+        val deleteImageView: ImageView = itemView.findViewById(R.id.deleteImageView)
         val taskBlockView: TaskBlockView = itemView.findViewById(R.id.taskBlockView)
-        val startCircle: ImageView = itemView.findViewById(R.id.startCircle)
-        val endCircle: ImageView = itemView.findViewById(R.id.endCircle)
     }
 
+    interface DeleteCallback {
+        fun deleteItem(position: Int, item: TaskBlock)
+    }
 }

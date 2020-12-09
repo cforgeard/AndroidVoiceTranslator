@@ -98,8 +98,9 @@ class SpeechRecognizerBlock(private val appContext: Context) : TaskBlock, Recogn
         resources: Resources
     ): View {
         val view = layoutInflater.inflate(R.layout.generic_loading_dialog, null)
-        view.findViewById<TextView>(R.id.textView).text =
+        view.findViewById<TextView>(R.id.title).text =
             resources.getString(R.string.speech_recognizer_block_prepare_execution)
+        view.findViewById<TextView>(R.id.subtitle).text = ""
         return view
     }
 
@@ -109,8 +110,9 @@ class SpeechRecognizerBlock(private val appContext: Context) : TaskBlock, Recogn
         view.findViewById<ImageView>(R.id.imageView).setImageDrawable(
             ContextCompat.getDrawable(view.context, R.drawable.ic_baseline_mic_24)
         )
-        view.findViewById<TextView>(R.id.textView).text =
+        view.findViewById<TextView>(R.id.title).text =
             resources.getString(R.string.speech_recognizer_block_execute)
+        view.findViewById<TextView>(R.id.subtitle).text = ""
         return view
     }
 

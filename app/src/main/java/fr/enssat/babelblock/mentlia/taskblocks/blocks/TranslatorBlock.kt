@@ -71,6 +71,7 @@ class TranslatorBlock(private val appContext: Context) : TaskBlock {
     annotation class Error
 
     private var translator: Translator? = null
+    private var currentString: String? = null
     private var sourceLanguage = ARG_TRANSLATE_SOURCE_LANGUAGE.defaultValue
     private var targetLanguage = ARG_TRANSLATE_TARGET_LANGUAGE.defaultValue
 
@@ -117,16 +118,18 @@ class TranslatorBlock(private val appContext: Context) : TaskBlock {
         resources: Resources
     ): View {
         val view = layoutInflater.inflate(R.layout.generic_loading_dialog, null)
-        view.findViewById<TextView>(R.id.textView).text =
+        view.findViewById<TextView>(R.id.title).text =
             resources.getString(R.string.translator_block_prepare_execution)
+        view.findViewById<TextView>(R.id.subtitle).text = "$sourceLanguage -> $targetLanguage"
         return view
     }
 
     @SuppressLint("InflateParams")
     override fun getExecuteView(layoutInflater: LayoutInflater, resources: Resources): View {
         val view = layoutInflater.inflate(R.layout.generic_loading_dialog, null)
-        view.findViewById<TextView>(R.id.textView).text =
+        view.findViewById<TextView>(R.id.title).text =
             resources.getString(R.string.translator_block_execute)
+        view.findViewById<TextView>(R.id.subtitle).text = currentString
         return view
     }
 
@@ -152,6 +155,7 @@ class TranslatorBlock(private val appContext: Context) : TaskBlock {
 
     override suspend fun execute(inputString: String?): String {
         try {
+            currentString = inputString
             Timber.i("translate start...")
             val translateTask = translator!!.translate(inputString!!)
             val translatedText = translateTask.await()!!
@@ -165,6 +169,7 @@ class TranslatorBlock(private val appContext: Context) : TaskBlock {
                 appContext.getString(R.string.unknown_error)
             )
         } finally {
+            currentString = null
             translator?.close()
         }
     }

@@ -30,7 +30,7 @@ class TextToSpeechBlock(private val appContext: Context) : TaskBlock, UtteranceP
 
         val MANIFEST = TaskBlockManifest(
             "TextToSpeechBlock",
-            TaskBlockType.IN,
+            TaskBlockType.INOUT,
             R.string.text_to_speech_block_name,
             R.string.text_to_speech_block_description,
             R.drawable.ic_baseline_speaker_24,
@@ -70,6 +70,7 @@ class TextToSpeechBlock(private val appContext: Context) : TaskBlock, UtteranceP
     private var error: String? = null
     private var ttsReady = false
     private var ttsDone = false
+    private var currentString: String? = null
     private var language = ARG_TTS_LANGUAGE.defaultValue
 
     private val textToSpeech: TextToSpeech = TextToSpeech(appContext) {
@@ -119,8 +120,9 @@ class TextToSpeechBlock(private val appContext: Context) : TaskBlock, UtteranceP
         resources: Resources
     ): View {
         val view = layoutInflater.inflate(R.layout.generic_loading_dialog, null)
-        view.findViewById<TextView>(R.id.textView).text =
+        view.findViewById<TextView>(R.id.title).text =
             resources.getString(R.string.text_to_speech_prepare_execution)
+        view.findViewById<TextView>(R.id.subtitle).text = ""
         return view
     }
 
@@ -130,8 +132,9 @@ class TextToSpeechBlock(private val appContext: Context) : TaskBlock, UtteranceP
         view.findViewById<ImageView>(R.id.imageView).setImageDrawable(
             ContextCompat.getDrawable(view.context, R.drawable.ic_baseline_speaker_24)
         )
-        view.findViewById<TextView>(R.id.textView).text =
+        view.findViewById<TextView>(R.id.title).text =
             resources.getString(R.string.text_to_speech_execute)
+        view.findViewById<TextView>(R.id.subtitle).text = currentString
         return view
     }
 
@@ -144,6 +147,7 @@ class TextToSpeechBlock(private val appContext: Context) : TaskBlock, UtteranceP
 
     override suspend fun execute(inputString: String?): String? {
         ttsDone = false
+        currentString = inputString
         utteranceID = UUID.randomUUID().toString()
         textToSpeech.language = Locale.forLanguageTag(language)
 
@@ -162,7 +166,8 @@ class TextToSpeechBlock(private val appContext: Context) : TaskBlock, UtteranceP
         if (error != null) throw TaskBlockException(this, error!!, generateUserErrorMessage())
         Timber.i("Speak OK")
 
-        return null
+        currentString = null
+        return inputString
     }
 
     override fun onError(utteranceId: String?, errorCode: Int) {

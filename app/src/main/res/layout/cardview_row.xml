@@ -14,49 +14,6 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
-        <LinearLayout
-            android:id="@+id/imageView"
-            android:layout_width="48dp"
-            android:layout_height="match_parent"
-            android:layout_weight="0"
-            android:orientation="vertical"
-            android:paddingLeft="8dp">
-
-            <ImageView
-                android:id="@+id/startCircle"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginTop="16dp"
-                android:layout_weight="0"
-                app:srcCompat="@drawable/circle" />
-
-            <View
-                android:layout_width="2dp"
-                android:layout_height="match_parent"
-                android:layout_gravity="center"
-                android:layout_weight="1"
-                android:background="#FF0000FF" />
-
-            <ImageView
-                android:id="@+id/endCircle"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginBottom="16dp"
-                android:layout_weight="0"
-                app:srcCompat="@drawable/circle" />
-
-        </LinearLayout>
-
-        <fr.enssat.babelblock.mentlia.taskblocks.TaskBlockView
-            android:id="@+id/taskBlockView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="8dp"
-            android:layout_weight="1"
-            android:paddingRight="8dp" />
-
         <ImageView
             android:id="@+id/moveImageView"
             android:layout_width="48dp"
@@ -66,6 +23,25 @@
             android:background="@color/light_gray"
             android:scaleType="center"
             app:srcCompat="@drawable/ic_baseline_menu_24" />
+
+        <fr.enssat.babelblock.mentlia.taskblocks.TaskBlockView
+            android:id="@+id/taskBlockView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:layout_weight="1"
+            android:paddingStart="8dp"
+            android:paddingEnd="8dp" />
+
+        <ImageView
+            android:id="@+id/deleteImageView"
+            android:layout_width="48dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:layout_weight="0"
+            android:background="@color/light_red"
+            android:scaleType="center"
+            app:srcCompat="@drawable/ic_delete" />
 
     </LinearLayout>
 
