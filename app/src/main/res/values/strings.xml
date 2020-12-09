@@ -49,4 +49,7 @@
     <string name="please_turn_off_text">Veuillez désactiver :</string>
     <string name="airplane_mode_off_button_text">Mode avion</string>
 
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
 </resources>

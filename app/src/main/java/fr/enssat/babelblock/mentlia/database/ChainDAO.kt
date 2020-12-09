@@ -14,9 +14,6 @@ interface ChainDAO {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insert(chain: Chain)
 
-    @Query("DELETE FROM Chain WHERE id = id")
-    suspend fun deleteId(id: Int)
-
     @Query("DELETE FROM Chain")
     suspend fun deleteAll()
 }
