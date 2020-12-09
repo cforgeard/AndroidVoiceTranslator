@@ -9,10 +9,12 @@ import android.net.Uri
 import android.os.Bundle
 import android.provider.Settings
 import android.view.Menu
+import android.view.MenuItem
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.core.view.GravityCompat
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import fr.enssat.babelblock.mentlia.databinding.ActivityMainBinding
@@ -81,6 +83,15 @@ class MainActivity : AppCompatActivity() {
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.main_menu, menu)
         return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.itemId == android.R.id.home) {
+            binding.activityMainDrawerLayout.openDrawer(GravityCompat.START)
+            return true
+        } else {
+            return super.onOptionsItemSelected(item)
+        }
     }
 
     override fun onResume() {
