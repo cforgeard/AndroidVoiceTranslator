@@ -27,11 +27,12 @@ class ChainListAdapter(
     inner class ChainViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val chainTextView: TextView = itemView.findViewById(R.id.content)
         private val chainButtonSupp: ImageButton = itemView.findViewById(R.id.supp_btn)
+        private val chainFavorite: TextView = itemView.findViewById(R.id.item_number)
 
         fun bind(item: Chain) {
             var text = item.name
             if (item.favorite == 0) {
-                text += " *"
+                chainFavorite.text = "*"
             }
 
             chainTextView.text = text

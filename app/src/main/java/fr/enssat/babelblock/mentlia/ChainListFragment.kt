@@ -24,6 +24,13 @@ class ChainListFragment : DialogFragment() {
         ChainViewModelFactory((requireActivity().application as Application).repository)
     }
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        arguments?.let {
+            isFavorite = it.getBoolean(ARG_IS_FAVORITE, false)
+        }
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
