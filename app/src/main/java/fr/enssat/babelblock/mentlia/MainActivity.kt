@@ -69,13 +69,13 @@ class MainActivity : AppCompatActivity() {
                     runTaskBlockChain()
                     true
                 }
-                R.id.activity_main_favori -> {
-                    val fragment = FavoriFragment()
+                R.id.activity_main_favorite -> {
+                    val fragment = ChainListFragment.newInstance(true)
                     fragment.show(supportFragmentManager, "fragment_add_task")
                     true
                 }
                 R.id.activity_main_gallery -> {
-                    val fragment = FavoriFragment()
+                    val fragment = ChainListFragment.newInstance(false)
                     fragment.show(supportFragmentManager, "fragment_add_task")
                     true
                 }

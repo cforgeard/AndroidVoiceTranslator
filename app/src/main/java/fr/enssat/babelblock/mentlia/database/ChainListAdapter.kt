@@ -3,6 +3,7 @@ package fr.enssat.babelblock.mentlia.database
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageButton
 import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
@@ -15,7 +16,7 @@ class ChainListAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ChainViewHolder {
         val view =
-            LayoutInflater.from(parent.context).inflate(R.layout.recyclerview_item, parent, false)
+            LayoutInflater.from(parent.context).inflate(R.layout.fragment_chain, parent, false)
         return ChainViewHolder(view)
     }
 
@@ -24,16 +25,18 @@ class ChainListAdapter(
     }
 
     inner class ChainViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        private val chainTextView: TextView = itemView.findViewById(R.id.textView)
+        private val chainTextView: TextView = itemView.findViewById(R.id.content)
+        private val chainButtonSupp: ImageButton = itemView.findViewById(R.id.supp_btn)
 
         fun bind(item: Chain) {
-            var text = item.nom
-            if (item.favori == 0) {
+            var text = item.name
+            if (item.favorite == 0) {
                 text += " *"
             }
 
             chainTextView.text = text
             chainTextView.setOnClickListener { clickCallback.onItemClicked(item) }
+            chainButtonSupp.setOnClickListener { clickCallback.deleteItem(item) }
         }
     }
 
@@ -43,12 +46,13 @@ class ChainListAdapter(
         }
 
         override fun areContentsTheSame(oldItem: Chain, newItem: Chain): Boolean {
-            return (oldItem.nom == newItem.nom && oldItem.json == oldItem.json)
+            return (oldItem.name == newItem.name && oldItem.json == oldItem.json)
         }
     }
 
     interface ClickCallback {
         fun onItemClicked(item: Chain)
+        fun deleteItem(item: Chain)
     }
 
 }

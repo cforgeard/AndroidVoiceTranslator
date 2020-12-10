@@ -10,6 +10,7 @@ class ChainViewModel (private val repository: ChainRepository) : ViewModel() {
     //   the UI when the data actually changes.
     // - Repository is completely separated from the UI through the ViewModel.
     val allChains: LiveData<List<Chain>> = repository.allChain.asLiveData()
+    val favoriteChains: LiveData<List<Chain>> = repository.favoriteChain.asLiveData()
 
     /**
      * Launching a new coroutine to insert the data in a non-blocking way

@@ -7,8 +7,8 @@ import org.json.JSONArray
 
 @Entity(tableName = "Chain")
 class Chain(
-    @ColumnInfo(name = "nom") var nom: String,
-    @ColumnInfo(name = "favori") var favori: Int,
+    @ColumnInfo(name = "name") var name: String,
+    @ColumnInfo(name = "favorite") var favorite: Int,
     @ColumnInfo(name = "json") var json: JSONArray
 ){
     @PrimaryKey(autoGenerate = true)

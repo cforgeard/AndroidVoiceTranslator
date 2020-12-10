@@ -44,8 +44,8 @@ class NewChainFragment : DialogFragment() {
         }
         binding = NewChainBinding.bind(view)
         binding.databaseSave.setOnClickListener {
-            if (!TextUtils.isEmpty(binding.nom.text)) {
-                val nom = binding.nom.text.toString()
+            if (!TextUtils.isEmpty(binding.name.text)) {
+                val nom = binding.name.text.toString()
                 val favori = binding.favori.isChecked
                 val chain = Chain(nom,booleanToInt(favori), viewModel.taskBlockChain.toJSON())
                 chainViewModel.insert(chain)

@@ -14,10 +14,11 @@ import fr.enssat.babelblock.mentlia.database.ChainListAdapter
 import fr.enssat.babelblock.mentlia.database.ChainViewModel
 import fr.enssat.babelblock.mentlia.database.ChainViewModelFactory
 
-class FavoriFragment : DialogFragment() {
+class ChainListFragment : DialogFragment() {
 
     private lateinit var viewModel: MainViewModel
     private lateinit var viewModelFactory: MainViewModelFactory
+    private var isFavorite = false
 
     private val chainViewModel: ChainViewModel by viewModels {
         ChainViewModelFactory((requireActivity().application as Application).repository)
@@ -27,7 +28,7 @@ class FavoriFragment : DialogFragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.fragment_favori_list, container, false)
+        val view = inflater.inflate(R.layout.fragment_chain_list, container, false)
 
         viewModelFactory = MainViewModelFactory(requireActivity().application)
         viewModel = ViewModelProvider(
@@ -39,18 +40,41 @@ class FavoriFragment : DialogFragment() {
         if (view is RecyclerView) {
             with(view) {
                 layoutManager = LinearLayoutManager(context)
-                adapter = ChainListAdapter(object : ChainListAdapter.ClickCallback {
-                    override fun onItemClicked(item: Chain) {
-                        viewModel.taskBlockChain.fromJSON(item.json, requireContext())
-                        dismiss()
+                adapter = ChainListAdapter(
+                    object : ChainListAdapter.ClickCallback {
+                        override fun onItemClicked(item: Chain) {
+                            viewModel.taskBlockChain.fromJSON(item.json, requireContext())
+                            dismiss()
+                        }
+                        override fun deleteItem(item: Chain) {
+                            chainViewModel.deleteId(item)
+                        }
                     }
-                })
-                chainViewModel.allChains.observe(requireActivity(), { chain ->
-                    chain?.let { (adapter as ChainListAdapter).submitList(it) }
-                })
+                )
+                if(isFavorite){
+                    chainViewModel.favoriteChains.observe(requireActivity(), { chain ->
+                        chain?.let { (adapter as ChainListAdapter).submitList(it) }
+                    })
+                }else{
+                    chainViewModel.allChains.observe(requireActivity(), { chain ->
+                        chain?.let { (adapter as ChainListAdapter).submitList(it) }
+                    })
+                }
             }
         }
 
         return view
     }
+
+    companion object {
+        const val ARG_IS_FAVORITE = "is-favorite"
+
+        fun newInstance(isFavorite: Boolean) =
+            NewChainFragment().apply {
+                arguments = Bundle().apply {
+                    putBoolean(ARG_IS_FAVORITE, isFavorite)
+                }
+            }
+    }
+
 }

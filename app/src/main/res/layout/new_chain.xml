@@ -11,13 +11,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/nom_enregistrer"
-        app:layout_constraintBottom_toTopOf="@+id/nom"
+        app:layout_constraintBottom_toTopOf="@+id/name"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
-        android:id="@+id/nom"
+        android:id="@+id/name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:width="200dp"
@@ -30,11 +30,11 @@
         android:id="@+id/favori"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/favori"
+        android:text="@string/favorite"
         app:layout_constraintBottom_toTopOf="@+id/return_chain"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/nom" />
+        app:layout_constraintTop_toBottomOf="@id/name" />
 
     <Button
         android:id="@+id/database_save"

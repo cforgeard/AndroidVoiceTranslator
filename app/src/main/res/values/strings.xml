@@ -56,7 +56,7 @@
     <string name="menu_gallery">Gallery</string>
     <string name="empty_not_saved">Word not saved because it is empty</string>
     <string name="nom_enregistrer">Nom à enregistrer :</string>
-    <string name="favori">Favori</string>
+    <string name="favorite">Favori</string>
     <string name="save">Save</string>
     <string name="add_word">Element Ajouter</string>
 

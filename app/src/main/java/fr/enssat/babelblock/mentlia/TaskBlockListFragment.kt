@@ -9,7 +9,6 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
-import fr.enssat.babelblock.mentlia.database.Chain
 import fr.enssat.babelblock.mentlia.databinding.FragmentTaskblockListBinding
 import fr.enssat.babelblock.mentlia.taskblocks.TaskBlock
 import fr.enssat.babelblock.mentlia.taskblocks.TaskBlockAdapter
@@ -42,7 +41,7 @@ class TaskBlockListFragment : Fragment() {
                 }
             },
             object : TaskBlockAdapter.DeleteCallback {
-                override fun deleteItem(item: Chain) {
+                override fun deleteItem(item: TaskBlock) {
                     val position = viewModel.taskBlockChain.indexOf(item)
                     showUndoDeleteSnackbar(item, position)
                     viewModel.taskBlockChain.removeAt(position)
