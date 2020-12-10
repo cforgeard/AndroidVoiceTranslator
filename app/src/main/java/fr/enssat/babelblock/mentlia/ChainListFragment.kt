@@ -70,7 +70,7 @@ class ChainListFragment : DialogFragment() {
         const val ARG_IS_FAVORITE = "is-favorite"
 
         fun newInstance(isFavorite: Boolean) =
-            NewChainFragment().apply {
+            ChainListFragment().apply {
                 arguments = Bundle().apply {
                     putBoolean(ARG_IS_FAVORITE, isFavorite)
                 }
