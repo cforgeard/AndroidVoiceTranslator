@@ -54,6 +54,10 @@ class TaskBlockChain(list: List<TaskBlock> = emptyList()) {
         }
     }
 
+    fun indexOf(taskBlock: TaskBlock): Int {
+        return list.indexOf(taskBlock)
+    }
+
     fun indices(): IntRange {
         return list.indices
     }

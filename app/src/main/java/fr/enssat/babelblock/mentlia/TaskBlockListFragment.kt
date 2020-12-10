@@ -41,7 +41,8 @@ class TaskBlockListFragment : Fragment() {
                 }
             },
             object : TaskBlockAdapter.DeleteCallback {
-                override fun deleteItem(position: Int, item: TaskBlock) {
+                override fun deleteItem(item: TaskBlock) {
+                    val position = viewModel.taskBlockChain.indexOf(item)
                     showUndoDeleteSnackbar(item, position)
                     viewModel.taskBlockChain.removeAt(position)
                 }

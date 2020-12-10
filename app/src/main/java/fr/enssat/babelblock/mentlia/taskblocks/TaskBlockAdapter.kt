@@ -37,7 +37,7 @@ class TaskBlockAdapter(
         val item = taskBlockChain.get(position)
         holder.taskBlockView.setTaskBlock(item)
         holder.deleteImageView.setOnClickListener {
-            deleteCallback.deleteItem(position, item)
+            deleteCallback.deleteItem(item)
         }
         holder.moveImageView.setOnTouchListener { _, event ->
             if (event.action ==
@@ -74,6 +74,6 @@ class TaskBlockAdapter(
     }
 
     interface DeleteCallback {
-        fun deleteItem(position: Int, item: TaskBlock)
+        fun deleteItem(item: TaskBlock)
     }
 }
