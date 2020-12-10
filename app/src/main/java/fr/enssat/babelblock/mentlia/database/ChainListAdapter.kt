@@ -1,16 +1,19 @@
 package fr.enssat.babelblock.mentlia.database
 
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import androidx.core.view.get
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import fr.enssat.babelblock.mentlia.R
+import fr.enssat.babelblock.mentlia.taskblocks.TaskBlockAdapter
 
-class ChainListAdapter : ListAdapter<Chain, ChainListAdapter.ChainViewHolder>(ChainsComparator()) {
+class ChainListAdapter(
+    private val deleteCallback: TaskBlockAdapter.DeleteCallback
+) : ListAdapter<Chain, ChainListAdapter.ChainViewHolder>(ChainsComparator()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ChainViewHolder {
         return ChainViewHolder.create(parent)
@@ -23,13 +26,26 @@ class ChainListAdapter : ListAdapter<Chain, ChainListAdapter.ChainViewHolder>(Ch
             text = text + " *"
         }
         holder.bind(text)
+        deleteCallback.deleteItem(current)
+        holder.moveImageView.setOnTouchListener { _, event ->
+            if (event.action ==
+                MotionEvent.ACTION_DOWN
+            ) {
+                startDragListener.requestDrag(holder)
+            }
+            false
+        }
     }
 
     class ChainViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val ChainItemView: TextView = itemView.findViewById(R.id.textView)
 
         fun bind(text: String?) {
-            ChainItemView.text = text
+            if(text == ""){
+                ChainItemView.text = "Pas d'élément dans base de données"
+            }else{
+                ChainItemView.text = text
+            }
         }
 
         companion object {

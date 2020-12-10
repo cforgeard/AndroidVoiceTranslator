@@ -19,4 +19,7 @@ interface ChainDAO {
 
     @Query("DELETE FROM Chain")
     suspend fun deleteAll()
+
+    @Query("DELETE FROM Chain WHERE id is (:id) ")
+    suspend fun deleteId(id: Long)
 }

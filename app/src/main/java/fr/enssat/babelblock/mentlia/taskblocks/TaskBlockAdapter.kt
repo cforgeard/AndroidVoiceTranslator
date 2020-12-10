@@ -11,6 +11,7 @@ import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
 import fr.enssat.babelblock.mentlia.R
 import fr.enssat.babelblock.mentlia.RecyclerViewMoveHelper
+import fr.enssat.babelblock.mentlia.database.Chain
 
 class TaskBlockAdapter(
     private val taskBlockChain: TaskBlockChain,
@@ -74,6 +75,6 @@ class TaskBlockAdapter(
     }
 
     interface DeleteCallback {
-        fun deleteItem(item: TaskBlock)
+        fun deleteItem(item: Chain)
     }
 }

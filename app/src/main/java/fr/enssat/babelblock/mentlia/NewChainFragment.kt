@@ -15,7 +15,6 @@ import fr.enssat.babelblock.mentlia.database.ChainViewModel
 import fr.enssat.babelblock.mentlia.database.ChainViewModelFactory
 import fr.enssat.babelblock.mentlia.databinding.NewChainBinding
 
-
 class NewChainFragment : DialogFragment() {
 
     private lateinit var binding: NewChainBinding

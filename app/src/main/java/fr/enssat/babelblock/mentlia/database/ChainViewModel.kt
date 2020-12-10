@@ -17,6 +17,12 @@ class ChainViewModel (private val repository: ChainRepository) : ViewModel() {
     fun insert(chain: Chain) = viewModelScope.launch {
         repository.insert(chain)
     }
+    /**
+     * Launching a new coroutine to delete the data in a non-blocking way
+     */
+    fun deleteId(chain: Chain) = viewModelScope.launch {
+        repository.deleteId(chain)
+    }
 }
 
 class ChainViewModelFactory(private val repository: ChainRepository) : ViewModelProvider.Factory {

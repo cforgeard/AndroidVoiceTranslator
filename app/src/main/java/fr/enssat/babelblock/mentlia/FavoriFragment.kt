@@ -1,24 +1,19 @@
 package fr.enssat.babelblock.mentlia
 
 import android.os.Bundle
-import android.text.TextUtils
-import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.activity.viewModels
 import androidx.fragment.app.DialogFragment
-import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import fr.enssat.babelblock.mentlia.database.Chain
-import fr.enssat.babelblock.mentlia.database.ChainListAdapter
-import fr.enssat.babelblock.mentlia.database.ChainViewModel
-import fr.enssat.babelblock.mentlia.database.ChainViewModelFactory
-import fr.enssat.babelblock.mentlia.dummy.DummyContent
+import com.google.android.material.snackbar.Snackbar
+import fr.enssat.babelblock.mentlia.database.*
+import fr.enssat.babelblock.mentlia.taskblocks.TaskBlock
+import fr.enssat.babelblock.mentlia.taskblocks.TaskBlockAdapter
 
 /**
  * A fragment representing a list of Items.
@@ -36,6 +31,7 @@ class FavoriFragment : DialogFragment() {
     private var columnCount = 1
     private var isDialog = false
     private var recyclerView: RecyclerView? = null
+    private var adapter: ChainListAdapter? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -60,10 +56,14 @@ class FavoriFragment : DialogFragment() {
                     else -> GridLayoutManager(context, columnCount)
                 }
                 recyclerView = findViewById<RecyclerView>(R.id.recyclerviewtest)
-                adapter = ChainListAdapter()
+                this.adapter = ChainListAdapter(object : TaskBlockAdapter.DeleteCallback {
+                    override fun deleteItem(item: Chain) {
+                        val position = chainViewModel.allChains.indexOf(item)
+                    }
+                })
                 chainViewModel.allChains.observe(requireActivity(), Observer { chain ->
                     // Update the cached copy of the words in the adapter.
-                    chain?.let { (adapter as ChainListAdapter).submitList(it) }
+                    chain?.let { (this.adapter as ChainListAdapter).submitList(it) }
                 })
 
             }
@@ -75,7 +75,7 @@ class FavoriFragment : DialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         recyclerView?.layoutManager = LinearLayoutManager(activity?.applicationContext)
-        recyclerView?.adapter = ChainListAdapter()
+        recyclerView?.adapter = this.adapter
 
         recyclerView?.setOnClickListener{
 
