@@ -9,7 +9,6 @@
     app:cardElevation="2dp">
 
     <LinearLayout
-        android:id="@+id/relativeLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
@@ -21,6 +20,7 @@
             android:layout_gravity="center"
             android:layout_weight="0"
             android:background="@color/light_gray"
+            android:contentDescription="@string/move"
             android:scaleType="center"
             app:srcCompat="@drawable/ic_baseline_menu_24" />
 
@@ -39,6 +39,7 @@
             android:layout_height="match_parent"
             android:layout_gravity="center"
             android:layout_weight="0"
+            android:contentDescription="@string/delete"
             android:background="@color/light_red"
             android:scaleType="center"
             app:srcCompat="@drawable/ic_delete" />

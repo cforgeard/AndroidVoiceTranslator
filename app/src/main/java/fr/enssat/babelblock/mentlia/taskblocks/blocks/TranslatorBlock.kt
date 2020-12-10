@@ -80,12 +80,12 @@ class TranslatorBlock(private val appContext: Context) : TaskBlock {
     }
 
     override fun getAdditionalParameter(parameterID: String): String {
-        when (parameterID) {
+        return when (parameterID) {
             ARG_TRANSLATE_SOURCE_LANGUAGE.id -> {
-                return sourceLanguage
+                sourceLanguage
             }
             ARG_TRANSLATE_TARGET_LANGUAGE.id -> {
-                return targetLanguage
+                targetLanguage
             }
             else -> {
                 throw IllegalArgumentException("Unknown parameter : $parameterID")
@@ -127,7 +127,7 @@ class TranslatorBlock(private val appContext: Context) : TaskBlock {
         )
     }
 
-    @SuppressLint("InflateParams")
+    @SuppressLint("InflateParams", "SetTextI18n")
     override fun getPrepareExecutionView(
         layoutInflater: LayoutInflater,
         resources: Resources

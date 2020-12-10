@@ -14,10 +14,6 @@
     </style>
 
     <!-- Toolbar theme. -->
-    <style name="ToolBarStyle" parent="VoiceTranslatorTheme">
-        <item name="android:textColorPrimary">@android:color/white</item>
-        <item name="colorControlNormal">@android:color/white</item>
-    </style>
 
     <style name="VoiceTranslatorTheme.NoActionBar">
         <item name="windowActionBar">false</item>

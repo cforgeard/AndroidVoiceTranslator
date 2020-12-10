@@ -49,15 +49,13 @@
     <string name="please_turn_off_text">Veuillez désactiver :</string>
     <string name="airplane_mode_off_button_text">Mode avion</string>
 
-    <string name="navigation_drawer_open">Open navigation drawer</string>
-    <string name="navigation_drawer_close">Close navigation drawer</string>
-    <string name="menu_favori">Favori</string>
-    <string name="menu_taskblock_list">Home</string>
-    <string name="menu_gallery">Gallery</string>
-    <string name="empty_not_saved">Word not saved because it is empty</string>
     <string name="name">Nom :</string>
     <string name="favorite">Marquer comme favori</string>
     <string name="save">Save</string>
-    <string name="add_word">Element Ajouter</string>
+    <string name="no_item_to_show">Aucun élément à afficher</string>
+    <string name="saved_items">Elements enregistrés</string>
+    <string name="favorites">Favoris</string>
+    <string name="delete">Supprimer</string>
+    <string name="move">Déplacer</string>
 
 </resources>

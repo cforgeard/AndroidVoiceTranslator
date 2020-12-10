@@ -4,11 +4,10 @@ import android.content.Context
 import androidx.room.*
 import kotlinx.coroutines.CoroutineScope
 import org.json.JSONArray
-import java.sql.Blob
 
-@Database(entities = arrayOf(Chain::class), version = 1, exportSchema = false)
+@Database(entities = [Chain::class], version = 1, exportSchema = false)
 @TypeConverters(Converters::class)
-public abstract class ChainDatabase : RoomDatabase() {
+abstract class ChainDatabase : RoomDatabase() {
     abstract fun chainDao(): ChainDAO
 
     companion object {
@@ -17,8 +16,10 @@ public abstract class ChainDatabase : RoomDatabase() {
         @Volatile
         private var INSTANCE: ChainDatabase? = null
 
-        fun getDatabase(context: Context,
-                        scope: CoroutineScope): ChainDatabase {
+        fun getDatabase(
+            context: Context,
+            @Suppress("UNUSED_PARAMETER") scope: CoroutineScope
+        ): ChainDatabase {
             // if the INSTANCE is not null, then return it,
             // if it is, then create the database
             return INSTANCE ?: synchronized(this) {
@@ -43,7 +44,7 @@ class Converters {
     }
 
     @TypeConverter
-    fun JSONToBlob(json: JSONArray?): String? {
+    fun jsonToBlob(json: JSONArray?): String? {
         return json?.toString()
     }
 

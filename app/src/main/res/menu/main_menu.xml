@@ -16,11 +16,11 @@
 
     <item
         android:id="@+id/activity_main_favorite"
-        android:title="@string/favorite" />
+        android:title="@string/favorites" />
 
     <item
         android:id="@+id/activity_main_gallery"
-        android:title="Gallery" />
+        android:title="@string/saved_items" />
 
 
 </menu>

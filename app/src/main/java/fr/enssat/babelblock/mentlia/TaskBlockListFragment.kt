@@ -1,3 +1,5 @@
+@file:Suppress("unused")
+
 package fr.enssat.babelblock.mentlia
 
 import android.os.Bundle

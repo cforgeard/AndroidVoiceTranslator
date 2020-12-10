@@ -12,7 +12,7 @@ import kotlinx.coroutines.launch
 import timber.log.Timber
 
 // https://www.varvet.com/blog/voice-to-text-arch-android/
-class MainViewModel(private val app: Application) : AndroidViewModel(app) {
+class MainViewModel(app: Application) : AndroidViewModel(app) {
 
     data class ViewState(
         val preparingExecution: Boolean,

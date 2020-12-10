@@ -17,7 +17,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.ui.AppBarConfiguration
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import fr.enssat.babelblock.mentlia.database.Chain
 import fr.enssat.babelblock.mentlia.database.ChainViewModel
@@ -34,7 +33,6 @@ class MainActivity : AppCompatActivity() {
         const val LAST_TASKBLOCK_CHAIN_PREF_NAME = "last_taskblock_chain"
     }
 
-    private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityMainBinding
     private lateinit var viewModel: MainViewModel
     private lateinit var viewModelFactory: MainViewModelFactory
@@ -61,7 +59,7 @@ class MainActivity : AppCompatActivity() {
             viewModel.taskBlockChain.fromJSON(jsonArray, applicationContext)
         }
 
-        binding.saveBtn?.setOnClickListener {
+        binding.saveBtn.setOnClickListener {
             val view = layoutInflater.inflate(R.layout.save_blockchain_dialog, null)
             val nameEditText = view.findViewById<EditText>(R.id.name_edittext)
             val favoriteCheckbox = view.findViewById<CheckBox>(R.id.favorite_checkbox)

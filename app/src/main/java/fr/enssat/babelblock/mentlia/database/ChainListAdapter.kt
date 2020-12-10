@@ -3,7 +3,7 @@ package fr.enssat.babelblock.mentlia.database
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageButton
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
@@ -25,19 +25,16 @@ class ChainListAdapter(
     }
 
     inner class ChainViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        private val chainTextView: TextView = itemView.findViewById(R.id.content)
-        private val chainButtonSupp: ImageButton = itemView.findViewById(R.id.supp_btn)
-        private val chainFavorite: TextView = itemView.findViewById(R.id.item_number)
+        private val content: TextView = itemView.findViewById(R.id.content)
+        private val deleteImageView: ImageView = itemView.findViewById(R.id.deleteImageView)
+        private val favoriteImageView: ImageView = itemView.findViewById(R.id.favoriteImageView)
 
         fun bind(item: Chain) {
-            var text = item.name
-            if (item.favorite == 0) {
-                chainFavorite.text = "*"
-            }
+            content.text = item.name
+            itemView.setOnClickListener { clickCallback.onItemClicked(item) }
+            deleteImageView.setOnClickListener { clickCallback.deleteItem(item) }
 
-            chainTextView.text = text
-            chainTextView.setOnClickListener { clickCallback.onItemClicked(item) }
-            chainButtonSupp.setOnClickListener { clickCallback.deleteItem(item) }
+            if (item.favorite == 0) favoriteImageView.setImageDrawable(null)
         }
     }
 

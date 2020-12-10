@@ -153,7 +153,7 @@ class TextToSpeechBlock(private val appContext: Context) : TaskBlock, UtteranceP
         Timber.i("Init OK")
     }
 
-    override suspend fun execute(inputString: String?): String? {
+    override suspend fun execute(inputString: String?): String {
         ttsDone = false
         currentString = inputString
         utteranceID = UUID.randomUUID().toString()

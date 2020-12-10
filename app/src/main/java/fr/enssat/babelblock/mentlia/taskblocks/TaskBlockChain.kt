@@ -17,10 +17,6 @@ class TaskBlockChain(list: List<TaskBlock> = emptyList()) {
         onItemInsertedListener = callback
     }
 
-    fun setOnItemMovedListener(callback: (oldPosition: Int, newPosition: Int) -> Unit) {
-        onItemMovedListener = callback
-    }
-
     fun setOnItemRemovedListener(callback: (position: Int) -> Unit) {
         onItemRemovedListener = callback
     }

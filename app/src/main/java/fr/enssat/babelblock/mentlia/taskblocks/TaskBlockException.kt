@@ -1,5 +1,6 @@
 package fr.enssat.babelblock.mentlia.taskblocks
 
+@Suppress("CanBeParameter")
 class TaskBlockException @JvmOverloads constructor(
     val taskBlock: TaskBlock,
     val detail: String,

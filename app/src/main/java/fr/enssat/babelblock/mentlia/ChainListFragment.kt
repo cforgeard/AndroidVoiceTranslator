@@ -9,10 +9,12 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import fr.enssat.babelblock.mentlia.database.Chain
 import fr.enssat.babelblock.mentlia.database.ChainListAdapter
 import fr.enssat.babelblock.mentlia.database.ChainViewModel
 import fr.enssat.babelblock.mentlia.database.ChainViewModelFactory
+
 
 class ChainListFragment : DialogFragment() {
 
@@ -26,6 +28,7 @@ class ChainListFragment : DialogFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setStyle(STYLE_NORMAL, R.style.Theme_AppCompat_Light_Dialog_Alert)
         arguments?.let {
             isFavorite = it.getBoolean(ARG_IS_FAVORITE, false)
         }
@@ -43,34 +46,64 @@ class ChainListFragment : DialogFragment() {
             viewModelFactory
         ).get(MainViewModel::class.java)
 
+        val chainListAdapter = ChainListAdapter(
+            object : ChainListAdapter.ClickCallback {
+                override fun onItemClicked(item: Chain) {
+                    viewModel.taskBlockChain.fromJSON(item.json, requireContext())
+                    dismiss()
+                }
+
+                override fun deleteItem(item: Chain) {
+                    chainViewModel.deleteId(item)
+                }
+            }
+        )
+
         // Set the adapter
         if (view is RecyclerView) {
             with(view) {
                 layoutManager = LinearLayoutManager(context)
-                adapter = ChainListAdapter(
-                    object : ChainListAdapter.ClickCallback {
-                        override fun onItemClicked(item: Chain) {
-                            viewModel.taskBlockChain.fromJSON(item.json, requireContext())
-                            dismiss()
-                        }
-                        override fun deleteItem(item: Chain) {
-                            chainViewModel.deleteId(item)
+                adapter = chainListAdapter
+            }
+
+            if (isFavorite) {
+                chainViewModel.favoriteChains.observe(requireActivity(), { chain ->
+                    chain?.let {
+                        if (it.isEmpty()) {
+                            showNoItemToShow()
+                        } else {
+                            chainListAdapter.submitList(it)
                         }
                     }
-                )
-                if(isFavorite){
-                    chainViewModel.favoriteChains.observe(requireActivity(), { chain ->
-                        chain?.let { (adapter as ChainListAdapter).submitList(it) }
-                    })
-                }else{
-                    chainViewModel.allChains.observe(requireActivity(), { chain ->
-                        chain?.let { (adapter as ChainListAdapter).submitList(it) }
-                    })
-                }
+                })
+            } else {
+                chainViewModel.allChains.observe(requireActivity(), { chain ->
+                    chain?.let {
+                        if (it.isEmpty()) {
+                            showNoItemToShow()
+                        } else {
+                            chainListAdapter.submitList(it)
+                        }
+                    }
+                })
             }
         }
 
         return view
+    }
+
+    override fun onDestroy() {
+        chainViewModel.allChains.removeObservers(requireActivity())
+        chainViewModel.favoriteChains.removeObservers(requireActivity())
+        super.onDestroy()
+    }
+
+    private fun showNoItemToShow() {
+        dismiss()
+        MaterialAlertDialogBuilder(requireContext())
+            .setMessage(R.string.no_item_to_show)
+            .setPositiveButton(android.R.string.ok, null)
+            .create().show()
     }
 
     companion object {
