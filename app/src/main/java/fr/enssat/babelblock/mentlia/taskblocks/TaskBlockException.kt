@@ -1,8 +1,9 @@
 package fr.enssat.babelblock.mentlia.taskblocks
 
-import java.lang.RuntimeException
-
+@Suppress("CanBeParameter")
 class TaskBlockException @JvmOverloads constructor(
-    message: String? = null,
+    val taskBlock: TaskBlock,
+    val detail: String,
+    val userErrorMessage: String,
     cause: Throwable? = null,
-) : RuntimeException(message, cause)
+) : RuntimeException("${taskBlock.getManifest().id} error $detail", cause)

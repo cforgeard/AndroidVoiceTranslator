@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/run"
+        android:contentDescription="@string/run"
+        android:icon="@drawable/ic_baseline_play_arrow_24"
+        android:title="@string/run"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/reset"
+        android:title="@string/reset"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/activity_main_favorite"
+        android:title="@string/favorites" />
+
+    <item
+        android:id="@+id/activity_main_gallery"
+        android:title="@string/saved_items" />
+
+
+</menu>

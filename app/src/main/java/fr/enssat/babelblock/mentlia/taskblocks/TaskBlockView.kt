@@ -8,15 +8,7 @@ import android.view.View
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
 import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
 import android.widget.*
-import fr.enssat.babelblock.mentlia.taskblocks.TaskBlock
-import fr.enssat.babelblock.mentlia.taskblocks.TaskBlockAdditionalParameterType
 import java.util.*
-
-private val LOCALES = arrayOf(
-    Locale.FRENCH, Locale.ENGLISH, Locale.GERMAN, Locale.ITALIAN,
-    Locale.JAPANESE, Locale.KOREAN, Locale.CHINESE,
-)
-
 
 class TaskBlockView @JvmOverloads constructor(
     context: Context,
@@ -24,12 +16,20 @@ class TaskBlockView @JvmOverloads constructor(
     defStyleAttr: Int = 0
 ) : LinearLayout(context, attrs, defStyleAttr) {
 
+    companion object {
+        private val LOCALES = arrayOf(
+            Locale.FRENCH, Locale.ENGLISH, Locale.GERMAN, Locale.ITALIAN,
+            Locale.JAPANESE, Locale.KOREAN, Locale.CHINESE,
+        )
+    }
+
     init {
         orientation = VERTICAL
     }
 
     private var taskBlock: TaskBlock? = null
 
+    @Suppress("unused")
     fun getTaskBlock(): TaskBlock? {
         return this.taskBlock
     }
@@ -43,33 +43,34 @@ class TaskBlockView @JvmOverloads constructor(
         removeAllViews()
         if (taskBlock == null) return
 
-        val taskTitle = TextView(context)
-        with(taskTitle) {
+        val taskName = TextView(context)
+        with(taskName) {
             layoutParams = LayoutParams(MATCH_PARENT, WRAP_CONTENT)
-            text = taskBlock!!.id()
+            text = context.getText(taskBlock!!.getManifest().nameTextResource)
             setTextSize(TypedValue.COMPLEX_UNIT_SP, 18F)
-            setTypeface(Typeface.DEFAULT_BOLD);
+            typeface = Typeface.DEFAULT_BOLD
         }
-        addView(taskTitle)
+        addView(taskName)
 
-        taskBlock!!.additionalParameters().forEach {
+        taskBlock!!.getManifest().additionalParameters.forEach {
+            val value = taskBlock!!.getAdditionalParameter(it.id)
             if (it.type == TaskBlockAdditionalParameterType.LANGUAGE) {
                 val spinnerTitle = TextView(context)
                 with(spinnerTitle) {
                     layoutParams = LayoutParams(MATCH_PARENT, WRAP_CONTENT)
-                    text = it.id
+                    text = context.getText(it.nameResource)
                 }
                 addView(spinnerTitle)
 
                 val spinner = Spinner(context)
                 val spinnerAdapter =
                     ArrayAdapter<String>(context, android.R.layout.simple_spinner_dropdown_item)
-                var defaultValuePosition = -1
+                var selectionIndex = -1
                 for (i in LOCALES.indices) {
-                    val locale = LOCALES.get(i)
+                    val locale = LOCALES[i]
                     spinnerAdapter.add(locale.displayLanguage.toString())
-                    if (locale.toString().split("-")[0] == it.defaultValue) {
-                        defaultValuePosition = i
+                    if (locale.toString().split("-")[0] == value) {
+                        selectionIndex = i
                     }
                 }
 
@@ -90,8 +91,8 @@ class TaskBlockView @JvmOverloads constructor(
                         }
                 }
 
-                if (defaultValuePosition != -1) {
-                    spinner.setSelection(defaultValuePosition)
+                if (selectionIndex != -1) {
+                    spinner.setSelection(selectionIndex)
                 }
 
                 addView(spinner)
