@@ -55,8 +55,8 @@
     <string name="menu_taskblock_list">Home</string>
     <string name="menu_gallery">Gallery</string>
     <string name="empty_not_saved">Word not saved because it is empty</string>
-    <string name="nom_enregistrer">Nom à enregistrer :</string>
-    <string name="favorite">Favori</string>
+    <string name="name">Nom :</string>
+    <string name="favorite">Marquer comme favori</string>
     <string name="save">Save</string>
     <string name="add_word">Element Ajouter</string>
 
