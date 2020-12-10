@@ -36,9 +36,9 @@ class AddTaskBlockFragment : DialogFragment() {
         val view = inflater.inflate(R.layout.fragment_add_taskblock, container, false)
         binding = FragmentAddTaskblockBinding.bind(view)
 
-        viewModelFactory = MainViewModelFactory(activity!!.application)
+        viewModelFactory = MainViewModelFactory(requireActivity().application)
         viewModel = ViewModelProvider(
-            activity!!,
+            requireActivity(),
             viewModelFactory
         ).get(MainViewModel::class.java)
 

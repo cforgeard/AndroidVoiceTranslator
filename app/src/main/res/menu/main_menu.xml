@@ -14,5 +14,13 @@
         android:title="@string/reset"
         app:showAsAction="never" />
 
+    <item
+        android:id="@+id/activity_main_favori"
+        android:title="@string/favori" />
+
+    <item
+        android:id="@+id/activity_main_gallery"
+        android:title="Gallery" />
+
 
 </menu>

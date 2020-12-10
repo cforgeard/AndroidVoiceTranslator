@@ -61,6 +61,10 @@ dependencies {
 
     implementation "androidx.room:room-ktx:$roomVersion"
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+    implementation 'androidx.navigation:navigation-fragment-ktx:2.3.2'
+    implementation 'androidx.navigation:navigation-ui-ktx:2.3.2'
+    implementation "androidx.navigation:navigation-dynamic-features-fragment:2.3.2"
+    implementation "androidx.navigation:navigation-compose:1.0.0-alpha03"
     //implementation "androidx.room:room-runtime:$roomVersion"
     kapt "androidx.room:room-compiler:$roomVersion"
     androidTestImplementation "androidx.room:room-testing:$roomVersion"

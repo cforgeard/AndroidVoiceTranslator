@@ -14,6 +14,9 @@ interface ChainDAO {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insert(chain: Chain)
 
+    @Query("SELECT * FROM Chain WHERE favori is (:favori)")
+    fun getFavoriChain(favori: Boolean): Flow<List<Chain>>
+
     @Query("DELETE FROM Chain")
     suspend fun deleteAll()
 }

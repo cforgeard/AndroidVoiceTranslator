@@ -9,13 +9,12 @@ import android.net.Uri
 import android.os.Bundle
 import android.provider.Settings
 import android.view.Menu
-import android.view.MenuItem
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import androidx.core.view.GravityCompat
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.ui.AppBarConfiguration
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import fr.enssat.babelblock.mentlia.databinding.ActivityMainBinding
 import org.imaginativeworld.oopsnointernet.NoInternetDialog
@@ -29,17 +28,20 @@ class MainActivity : AppCompatActivity() {
         const val LAST_TASKBLOCK_CHAIN_PREF_NAME = "last_taskblock_chain"
     }
 
+    private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityMainBinding
     private lateinit var viewModel: MainViewModel
     private lateinit var viewModelFactory: MainViewModelFactory
     private var loadingDialog: AlertDialog? = null
     private var noInternetDialog: NoInternetDialog? = null
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         setSupportActionBar(binding.toolbar)
+
 
         viewModelFactory = MainViewModelFactory(application)
         viewModel = ViewModelProvider(this, viewModelFactory).get(MainViewModel::class.java)
@@ -48,6 +50,11 @@ class MainActivity : AppCompatActivity() {
         if (preferences.contains(LAST_TASKBLOCK_CHAIN_PREF_NAME)) {
             val jsonArray = JSONArray(preferences.getString(LAST_TASKBLOCK_CHAIN_PREF_NAME, null))
             viewModel.taskBlockChain.fromJSON(jsonArray, applicationContext)
+        }
+
+        binding.saveBtn?.setOnClickListener{
+            val fragment = NewChainFragment.newInstance(true,viewModel)
+            fragment.show(supportFragmentManager, "fragment_add_task")
         }
 
         binding.addBtn?.setOnClickListener {
@@ -60,6 +67,16 @@ class MainActivity : AppCompatActivity() {
             when (menuItem.itemId) {
                 R.id.run -> {
                     runTaskBlockChain()
+                    true
+                }
+                R.id.activity_main_favori -> {
+                    val fragment = FavoriFragment.newInstance(1,true)
+                    fragment.show(supportFragmentManager, "fragment_add_task")
+                    true
+                }
+                R.id.activity_main_gallery -> {
+                    val fragment = FavoriFragment.newInstance(1,true)
+                    fragment.show(supportFragmentManager, "fragment_add_task")
                     true
                 }
                 R.id.reset -> {
@@ -83,15 +100,6 @@ class MainActivity : AppCompatActivity() {
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.main_menu, menu)
         return true
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if (item.itemId == android.R.id.home) {
-            binding.activityMainDrawerLayout.openDrawer(GravityCompat.START)
-            return true
-        } else {
-            return super.onOptionsItemSelected(item)
-        }
     }
 
     override fun onResume() {

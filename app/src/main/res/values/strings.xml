@@ -51,5 +51,13 @@
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="menu_favori">Favori</string>
+    <string name="menu_taskblock_list">Home</string>
+    <string name="menu_gallery">Gallery</string>
+    <string name="empty_not_saved">Word not saved because it is empty</string>
+    <string name="nom_enregistrer">Nom à enregistrer :</string>
+    <string name="favori">Favori</string>
+    <string name="save">Save</string>
+    <string name="add_word">Element Ajouter</string>
 
 </resources>
