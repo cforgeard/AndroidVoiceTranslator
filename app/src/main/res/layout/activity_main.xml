@@ -25,6 +25,7 @@
         </com.google.android.material.appbar.AppBarLayout>
 
         <androidx.fragment.app.FragmentContainerView
+            android:id="@+id/list_fragment"
             android:name="fr.enssat.babelblock.mentlia.TaskBlockListFragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent"

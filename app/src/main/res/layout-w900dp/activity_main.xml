@@ -36,6 +36,7 @@
             app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
             <androidx.fragment.app.FragmentContainerView
+                android:id="@+id/add_fragment"
                 android:name="fr.enssat.babelblock.mentlia.AddTaskBlockFragment"
                 android:layout_width="300dp"
                 android:layout_height="match_parent"
@@ -43,6 +44,7 @@
 
             <androidx.fragment.app.FragmentContainerView
                 android:name="fr.enssat.babelblock.mentlia.TaskBlockListFragment"
+                android:id="@+id/list_fragment"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1" />
