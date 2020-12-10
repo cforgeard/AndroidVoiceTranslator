@@ -16,7 +16,7 @@
 
     <item
         android:id="@+id/activity_main_favori"
-        android:title="@string/favori" />
+        android:title="Favoris" />
 
     <item
         android:id="@+id/activity_main_gallery"

@@ -9,6 +9,9 @@ import android.net.Uri
 import android.os.Bundle
 import android.provider.Settings
 import android.view.Menu
+import android.widget.CheckBox
+import android.widget.EditText
+import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
@@ -16,6 +19,9 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.ui.AppBarConfiguration
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import fr.enssat.babelblock.mentlia.database.Chain
+import fr.enssat.babelblock.mentlia.database.ChainViewModel
+import fr.enssat.babelblock.mentlia.database.ChainViewModelFactory
 import fr.enssat.babelblock.mentlia.databinding.ActivityMainBinding
 import org.imaginativeworld.oopsnointernet.NoInternetDialog
 import org.json.JSONArray
@@ -35,6 +41,9 @@ class MainActivity : AppCompatActivity() {
     private var loadingDialog: AlertDialog? = null
     private var noInternetDialog: NoInternetDialog? = null
 
+    private val chainViewModel: ChainViewModel by viewModels {
+        ChainViewModelFactory((application as Application).repository)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -52,9 +61,24 @@ class MainActivity : AppCompatActivity() {
             viewModel.taskBlockChain.fromJSON(jsonArray, applicationContext)
         }
 
-        binding.saveBtn?.setOnClickListener{
-            val fragment = NewChainFragment.newInstance(true,viewModel)
-            fragment.show(supportFragmentManager, "fragment_add_task")
+        binding.saveBtn?.setOnClickListener {
+            val view = layoutInflater.inflate(R.layout.save_blockchain_dialog, null)
+            val nameEditText = view.findViewById<EditText>(R.id.name_edittext)
+            val favoriteCheckbox = view.findViewById<CheckBox>(R.id.favorite_checkbox)
+
+            MaterialAlertDialogBuilder(this)
+                .setView(view)
+                .setTitle(R.string.save)
+                .setPositiveButton(
+                    android.R.string.ok
+                ) { _, _ ->
+                    val name = nameEditText.text.toString()
+                    val isFavorite = if (favoriteCheckbox.isChecked) 1 else 0
+                    val chain = Chain(name, isFavorite, viewModel.taskBlockChain.toJSON())
+                    chainViewModel.insert(chain)
+                }
+                .setNegativeButton(android.R.string.cancel, null)
+                .create().show()
         }
 
         binding.addBtn?.setOnClickListener {
