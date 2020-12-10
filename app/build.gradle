@@ -19,7 +19,6 @@ android {
                 arguments += ["room.incremental":"true"]
             }
         }
-
     }
 
     buildTypes {
@@ -77,7 +76,7 @@ dependencies {
     api "org.jetbrains.kotlinx:kotlinx-coroutines-core:$rootProject.coroutines"
     api "org.jetbrains.kotlinx:kotlinx-coroutines-android:$rootProject.coroutines"
 
-    // https://square.github.io/leakcanary/getting_started/
+    // https://square.github.io/leakcanary/getting_started
     debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.5'
 
     testImplementation 'junit:junit:4.13.1'

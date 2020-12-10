@@ -27,9 +27,9 @@ class TaskBlockListFragment : Fragment() {
         val view = inflater.inflate(R.layout.fragment_taskblock_list, container, false)
         binding = FragmentTaskblockListBinding.bind(view)
 
-        viewModelFactory = MainViewModelFactory(activity!!.application)
+        viewModelFactory = MainViewModelFactory(requireActivity().application)
         viewModel = ViewModelProvider(
-            activity!!,
+            requireActivity(),
             viewModelFactory
         ).get(MainViewModel::class.java)
 

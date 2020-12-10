@@ -4,40 +4,36 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import androidx.core.view.get
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import fr.enssat.babelblock.mentlia.R
 
-class ChainListAdapter : ListAdapter<Chain, ChainListAdapter.ChainViewHolder>(ChainsComparator()) {
+class ChainListAdapter(
+    private val clickCallback: ClickCallback
+) : ListAdapter<Chain, ChainListAdapter.ChainViewHolder>(ChainsComparator()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ChainViewHolder {
-        return ChainViewHolder.create(parent)
+        val view =
+            LayoutInflater.from(parent.context).inflate(R.layout.recyclerview_item, parent, false)
+        return ChainViewHolder(view)
     }
 
     override fun onBindViewHolder(holder: ChainViewHolder, position: Int) {
-        val current = getItem(position)
-        var text = current.nom
-        if (current.favori == 0) {
-            text = text + " *"
-        }
-        holder.bind(text)
+        holder.bind(getItem(position))
     }
 
-    class ChainViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        private val ChainItemView: TextView = itemView.findViewById(R.id.textView)
+    inner class ChainViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        private val chainTextView: TextView = itemView.findViewById(R.id.textView)
 
-        fun bind(text: String?) {
-            ChainItemView.text = text
-        }
-
-        companion object {
-            fun create(parent: ViewGroup): ChainViewHolder {
-                val view: View = LayoutInflater.from(parent.context)
-                    .inflate(R.layout.recyclerview_item, parent, false)
-                return ChainViewHolder(view)
+        fun bind(item: Chain) {
+            var text = item.nom
+            if (item.favori == 0) {
+                text += " *"
             }
+
+            chainTextView.text = text
+            chainTextView.setOnClickListener { clickCallback.onItemClicked(item) }
         }
     }
 
@@ -50,4 +46,9 @@ class ChainListAdapter : ListAdapter<Chain, ChainListAdapter.ChainViewHolder>(Ch
             return (oldItem.nom == newItem.nom && oldItem.json == oldItem.json)
         }
     }
+
+    interface ClickCallback {
+        fun onItemClicked(item: Chain)
+    }
+
 }

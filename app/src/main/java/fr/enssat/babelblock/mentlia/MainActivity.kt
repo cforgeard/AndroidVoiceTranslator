@@ -70,12 +70,12 @@ class MainActivity : AppCompatActivity() {
                     true
                 }
                 R.id.activity_main_favori -> {
-                    val fragment = FavoriFragment.newInstance(1,true)
+                    val fragment = FavoriFragment()
                     fragment.show(supportFragmentManager, "fragment_add_task")
                     true
                 }
                 R.id.activity_main_gallery -> {
-                    val fragment = FavoriFragment.newInstance(1,true)
+                    val fragment = FavoriFragment()
                     fragment.show(supportFragmentManager, "fragment_add_task")
                     true
                 }
