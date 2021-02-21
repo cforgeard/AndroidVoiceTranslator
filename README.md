@@ -16,7 +16,7 @@ VoiceTranslator is an Android application that allows you to translate an audio 
 
 <br />
 
-[![Screenshot](./screenshot.PNG)]()
+[![Screenshot](./screenshot.png)]()
 
 The script in this screenshot do four steps :
 - listen to the user speak French
