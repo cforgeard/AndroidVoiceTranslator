@@ -5,10 +5,10 @@
 VoiceTranslator
 ===============
 
-[![AGPL-3.0](https://img.shields.io/badge/license-Apache%202.0-green)]()
-[![project status: inactive](https://img.shields.io/badge/project%20status-inactive-inactive)]()
-[![language: Kotlin](https://img.shields.io/badge/language-Kotlin-blue)]()
-[![IDE: Android Studio](https://img.shields.io/badge/IDE-Android%20Studio-blue)]()
+![AGPL-3.0](https://img.shields.io/badge/license-Apache%202.0-green)
+![project status: inactive](https://img.shields.io/badge/project%20status-inactive-inactive)
+![language: Kotlin](https://img.shields.io/badge/language-Kotlin-blue)
+![IDE: Android Studio](https://img.shields.io/badge/IDE-Android%20Studio-blue)
 
 VoiceTranslator is an Android application that allows you to translate an audio message in one language into another language.
 
@@ -16,7 +16,7 @@ VoiceTranslator is an Android application that allows you to translate an audio 
 
 <br />
 
-[![Screenshot](./screenshot.png)]()
+![Screenshot](./screenshot.png)
 
 The script in this screenshot do four steps :
 - listen to the user speak French
