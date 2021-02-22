@@ -5,7 +5,7 @@
 VoiceTranslator
 ===============
 
-![AGPL-3.0](https://img.shields.io/badge/license-Apache%202.0-green)
+![Apache 2.0](https://img.shields.io/badge/license-Apache%202.0-green)
 ![project status: inactive](https://img.shields.io/badge/project%20status-inactive-inactive)
 ![language: Kotlin](https://img.shields.io/badge/language-Kotlin-blue)
 ![IDE: Android Studio](https://img.shields.io/badge/IDE-Android%20Studio-blue)
@@ -26,7 +26,7 @@ The script in this screenshot do four steps :
 
 ## Features
 
-- ✅ Block scripting systems
+- ✅ Block scripting system
 - ✅ Three types of blocks
     - Voice recognition
     - Text to speech
